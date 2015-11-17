@@ -1,0 +1,29 @@
+/*  jQuery('#trail-holder').empty();
+
+    // loop through all the steps and add them in the animal-holder div
+    for(var i=0;i<trails.length;i++){
+
+        var stepsInTrail = '';
+        for(var j=0;j<trails[i].steps.length;j++){
+            stepsInTrail += 
+            '<ul>'+
+                '<li><span class="step-title">'+trails[i].steps[j].title+'</span></li>'+
+                '<li>Saved Text: <span class="text">'+trails[i].steps[j].text+'</span></li>'+
+                '<li>URL: <span class="url">'+trails[i].steps[j].url+'</span></li>'+
+                '<li>Tags: <span class="tags">'+trails[i].steps[j].tags+'</span></li>'+
+                '<li class="hide id">'+trails[i].steps[j]._id+'</li>'+
+            '</ul>';
+        }
+
+        var htmlToAdd = '<div class="col-md-4 trail">'+
+            '<h1 class="title">'+trails[i].title+'</h1>'+
+            stepsInTrail +
+            '<button type="button" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
+            '<button type="button" id="'+trails[i]._id+'" onclick="deleteStep(event)">Delete Trail</button>'+
+            '<button type="button" data-toggle="modal" data-target="#editModal"">Edit Step</button>'+
+        '</div>';
+*/
+
+.sidebarholder.row {
+    background-color: mediumspringgreen;
+}

@@ -16,7 +16,10 @@
                 "scripts/content_script.js",
                 "scripts/boostrap-3_3_5.js"
             ],
-            "css": [ "css/boostrap-3_3_5.css" ]
+            "css": [ 
+                "css/boostrap-3_3_5.css",
+                "css/style.css"
+            ]
         }
     ],
     "background": {
@@ -25,7 +28,7 @@
             "scripts/jquery.js",
             "scripts/boostrap-3_3_5.js"
          ],
-         "css": [ "css/boostrap-3_3_5.css" ],
+         "css": [ "css/bootstrap-3_3_5.css"],
          "persistant": true
         
     },
