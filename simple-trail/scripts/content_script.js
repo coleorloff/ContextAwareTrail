@@ -3,84 +3,63 @@ var site;
 var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
+var first = true;
 
-// Original funciton + button
-// $(document).ready(function(){
-//     var host = window.location.hostname;
-//     var pageBody = $(document.body);
-//     var pageURL = window.location.href;   
-//     console.log("pageURL =" + pageURL) 
-//     console.log('hostname -->' + host)
-//     // This is where the buttons and other elements are injected into the page
-//     //I think we need to figure out how to inject content without disturbing the original page content 
-//     $('<div class="container">'+'</div>').prependTo(pageBody);
-//     $('<button id="toggler">Toggle</button>').prependTo(pageBody);
-//     var htmlToAdd = 
-//             '<div class="menu" id="main">'+
-//             '<h1> MAIN MENUISH THING</h1>'+
-//             '<div class="btn-group">'+
-//             '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
-//             '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
-//             '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
-//             '</div>'+
-//             '</div>';
+// Talking to POPUP.js
 
-//     jQuery('.container').prepend(htmlToAdd);
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if(first && !open && request.message == "clicked_button_in_popup") {
+            first = false;
+            loadEx();
+            displayTrail();
+        } else if (!first && !open && request.message == "clicked_button_in_popup"){
+           toggleTrail();
+            console.log("display trailz!!!!");
+        } else {
+            console.log("hiding the stash");
+            toggleTrail();
+        }
+        chrome.runtime.sendMessage({"message":"open_new_tab"})
+})
 
-// });
-
+///MAIN DOCUMENT FUNCTION////
 $(document).ready(function(){
-    // var host = window.location.hostname;
-    // var pageBody = $(document.body);
-    // var pageURL = window.location.href;   
-    // console.log("pageURL =" + pageURL) 
-    // console.log('hostname -->' + host)
-    // This is where the buttons and other elements are injected into the page
-    //I think we need to figure out how to inject content without disturbing the original page content 
-    // $('<div class="container">'+'</div>').prependTo(pageBody);
-    // $('<button id="toggler">Toggle</button>').prependTo(pageBody);
-    // var htmlToAdd = 
-    //         '<div class="menu" id="main">'+
-    //         '<h1> MAIN MENUISH THING</h1>'+
-    //         '<div class="btn-group">'+
-    //         '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
-    //         '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
-    //         '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
-    //         '</div>'+
-    //         '</div>';
-
-    // jQuery('.container').prepend(htmlToAdd);
-    loadEx();
-
+    toggleContainer();
 });
 
+function toggleTrail(){
+    $('body').on('click', '#display-trail', function(e){
+        if (!open){
+            renderTrail(); 
+            open = true;
+            console.log("your drawer is open, sir.")
+        } else {
+            console.log("hiding the stash")
+            shrinkTrail();
+            open = false;
+        }
+    });
+};
 
-$('body').on('click', '#display-trail', function(e){
-    if (!open){
-        displayTrail(); 
-        open = true;
-        console.log("your drawer is open, sir.")
-    } else {
-        console.log("hiding the stash")
-        hideTrail();
-        open = false;
-    }
-});
-
-$('body').on('click', '#toggler', function(e){
-    e.preventDefault();
-    $(".container").toggleClass("toggled");
-});
+function toggleContainer(){
+    $('body').on('click', '#toggler', function(e){
+        e.preventDefault();
+        $(".container").toggleClass("toggled");
+    });
+};
 
 function loadEx(){
-     var host = window.location.hostname;
+    var host = window.location.hostname;
     var pageBody = $(document.body);
     var pageURL = window.location.href;   
+    
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
-      $('<div class="container">'+'</div>').prependTo(pageBody);
+    $('<div class="container">'+'</div>').prependTo(pageBody);
+    $('<div id="trail-holder">'+'</div>').appendTo('.container');
     $('<button id="toggler">Toggle</button>').prependTo(pageBody);
-    var htmlToAdd = 
+        var htmlToAdd = 
             '<div class="menu" id="main">'+
             '<h1> MAIN MENUISH THING</h1>'+
             '<div class="btn-group">'+
@@ -109,7 +88,14 @@ function displayTrail(){
 }
 
 function hideTrail(){
-   $('.step-holder').hide();
+   $('.container').toggleClass('.toggled');
+}
+
+function shrinkTrail(){
+  $('body').on('click', '#display-trail', function(e){
+    e.preventDefault();
+    $("#trail-holder").empty();
+});
 }
 
 $('body').on('click', '#add-trail', function(e){
@@ -219,8 +205,7 @@ function renderSteps(steps){
 function renderTrail(trails){
 
     var htmlToAdd = 
-            '<div id="trail-holder">'+'</div>';
-
+           
     jQuery('.container').append(htmlToAdd);
 
     // first, make sure the #animal-holder is empty

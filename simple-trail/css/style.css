@@ -24,6 +24,7 @@ p {
 
 .container{
 	max-height: 100%;
+	max-width: 35%;
 	position: absolute;
 	right: 0;
 	background-color: lightyellow;
@@ -34,13 +35,15 @@ p {
 	visibility: hidden;
 }
 
+.toggled{
+	visibility: none;
+}
+
 .step-holder {
-	background-color: mediumspringgreen;
 	z-index: 99;
 }
 
 #main {
-	background-color: grey;
 	margin-bottom: 4%;
 
 }

@@ -90,8 +90,6 @@ chrome.runtime.onConnect.addListener(function(port) {
 function init() {
   renderTrailMap();
 }
-
-// chrome.browserAction.onClicked.addListener(function());
     
 function renderTrailMap() {
     console.log("render that shit");
