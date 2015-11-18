@@ -2,35 +2,96 @@
 var site;
 var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
+var open = false;
+
+// Original funciton + button
+// $(document).ready(function(){
+//     var host = window.location.hostname;
+//     var pageBody = $(document.body);
+//     var pageURL = window.location.href;   
+//     console.log("pageURL =" + pageURL) 
+//     console.log('hostname -->' + host)
+//     // This is where the buttons and other elements are injected into the page
+//     //I think we need to figure out how to inject content without disturbing the original page content 
+//     $('<div class="container">'+'</div>').prependTo(pageBody);
+//     $('<button id="toggler">Toggle</button>').prependTo(pageBody);
+//     var htmlToAdd = 
+//             '<div class="menu" id="main">'+
+//             '<h1> MAIN MENUISH THING</h1>'+
+//             '<div class="btn-group">'+
+//             '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
+//             '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
+//             '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
+//             '</div>'+
+//             '</div>';
+
+//     jQuery('.container').prepend(htmlToAdd);
+
+// });
 
 $(document).ready(function(){
-    var host = window.location.hostname;
+    // var host = window.location.hostname;
+    // var pageBody = $(document.body);
+    // var pageURL = window.location.href;   
+    // console.log("pageURL =" + pageURL) 
+    // console.log('hostname -->' + host)
+    // This is where the buttons and other elements are injected into the page
+    //I think we need to figure out how to inject content without disturbing the original page content 
+    // $('<div class="container">'+'</div>').prependTo(pageBody);
+    // $('<button id="toggler">Toggle</button>').prependTo(pageBody);
+    // var htmlToAdd = 
+    //         '<div class="menu" id="main">'+
+    //         '<h1> MAIN MENUISH THING</h1>'+
+    //         '<div class="btn-group">'+
+    //         '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
+    //         '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
+    //         '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
+    //         '</div>'+
+    //         '</div>';
+
+    // jQuery('.container').prepend(htmlToAdd);
+    loadEx();
+
+});
+
+
+$('body').on('click', '#display-trail', function(e){
+    if (!open){
+        displayTrail(); 
+        open = true;
+        console.log("your drawer is open, sir.")
+    } else {
+        console.log("hiding the stash")
+        hideTrail();
+        open = false;
+    }
+});
+
+$('body').on('click', '#toggler', function(e){
+    e.preventDefault();
+    $(".container").toggleClass("toggled");
+});
+
+function loadEx(){
+     var host = window.location.hostname;
     var pageBody = $(document.body);
     var pageURL = window.location.href;   
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
-    // This is where the buttons and other elements are injected into the page
-    //I think we need to figure out how to inject content without disturbing the original page content 
-    $('<div class="sidebar-holder row"> Hello '+ pageURL +' World </div>').prependTo(pageBody)
+      $('<div class="container">'+'</div>').prependTo(pageBody);
+    $('<button id="toggler">Toggle</button>').prependTo(pageBody);
     var htmlToAdd = 
-        '<div class="col-md-4 trail">'+
-            '<h1 class="title">'+host+'</h1>'+
-            '<div id="trail-holder">'+
-
+            '<div class="menu" id="main">'+
+            '<h1> MAIN MENUISH THING</h1>'+
+            '<div class="btn-group">'+
+            '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
+            '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
+            '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
             '</div>'+
-            '<div id="step-holder"></div>'+
-            '<button type="button" id="display-trail">Display Trail</button>'+
-            '<button type="button" id="add-trail">Add Trail</button>'+
-            '<button type="button" id="add-step">Add Step</button>'+
-        '</div>';
+            '</div>';
 
-    jQuery('.sidebar-holder').prepend(htmlToAdd);
-
-});
-
-$('body').on('click', '#display-trail', function(e){
-    displayTrail();
-});
+    jQuery('.container').prepend(htmlToAdd);
+}
 
 function displayTrail(){
     port.postMessage({"display": "display trail"});
@@ -39,12 +100,16 @@ function displayTrail(){
             console.log ("status returned success on returned to server");
             console.log ("now render msg.response --> "+ msg.res);
             renderTrail(msg.res);
-           
+                       
 
         }
       else if (msg.question == "Madame who?")
         port.postMessage({"answer": "Madame... Bovary"});
     });
+}
+
+function hideTrail(){
+   $('.step-holder').hide();
 }
 
 $('body').on('click', '#add-trail', function(e){
@@ -153,6 +218,11 @@ function renderSteps(steps){
 // This is where the trails are injected into the page
 function renderTrail(trails){
 
+    var htmlToAdd = 
+            '<div id="trail-holder">'+'</div>';
+
+    jQuery('.container').append(htmlToAdd);
+
     // first, make sure the #animal-holder is empty
     jQuery('#trail-holder').empty();
 
@@ -162,24 +232,31 @@ function renderTrail(trails){
         var stepsInTrail = '';
         for(var j=0;j<trails[i].steps.length;j++){
             stepsInTrail += 
-            '<ul>'+
-                '<li><span class="step-title">'+trails[i].steps[j].title+'</span></li>'+
-                '<li>Saved Text: <span class="text">'+trails[i].steps[j].text+'</span></li>'+
-                '<li>URL: <span class="url">'+trails[i].steps[j].url+'</span></li>'+
-                '<li>Tags: <span class="tags">'+trails[i].steps[j].tags+'</span></li>'+
-                '<li class="hide id">'+trails[i].steps[j]._id+'</li>'+
-            '</ul>';
+            '<div class="step-holder">'+
+
+            '<div class="panel panel-default">'+
+
+            '<div class="panel-heading">'+trails[i].title+'</div>'+
+            '<div class="panel-body>'+
+            '<ul class="list-group">'+
+                '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
+                '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
+                '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
+                '<li class="list-group-item" id="tags"> Tags: '+trails[i].steps[j].tags+'</span></li>'+
+                '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
+                '</div>'
+            '<div class="btn-group">'+
+            '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
+            '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="deleteStep(event)">Delete Trail</button>'+
+            '<button type="button" class="btn btn-group" data-toggle="modal" data-target="#editModal"">Edit Step</button>'+
+            '</div>'+
+
+            '</div>'+
+
+            '</div>';
         }
 
-        var htmlToAdd = '<div class="col-md-4 trail">'+
-            '<h1 class="title">'+trails[i].title+'</h1>'+
-            stepsInTrail +
-            '<button type="button" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
-            '<button type="button" id="'+trails[i]._id+'" onclick="deleteStep(event)">Delete Trail</button>'+
-            '<button type="button" data-toggle="modal" data-target="#editModal"">Edit Step</button>'+
-        '</div>';
-
-        jQuery('#trail-holder').append(htmlToAdd);
+        jQuery('#trail-holder').append(stepsInTrail);
 
     }
     trackTrailId(trails);
@@ -198,5 +275,16 @@ function saveText(e){
     e.preventDefault();
 
 }
+
+function colorMePretty(trails){
+  for(var i=0;i<trails.length;i++){
+        var tagGroup = '';
+        for(var j=0;j<trails[i].steps.length;j++){
+            tagGroup += trails[i].steps[j].tags;
+        }
+    }
+    return(tagGroup);
+    console.log("TAG GROUP: "+tagGroup);
+};
 
 

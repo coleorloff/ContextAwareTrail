@@ -1,29 +1,47 @@
-/*  jQuery('#trail-holder').empty();
-
-    // loop through all the steps and add them in the animal-holder div
-    for(var i=0;i<trails.length;i++){
-
-        var stepsInTrail = '';
-        for(var j=0;j<trails[i].steps.length;j++){
-            stepsInTrail += 
-            '<ul>'+
-                '<li><span class="step-title">'+trails[i].steps[j].title+'</span></li>'+
-                '<li>Saved Text: <span class="text">'+trails[i].steps[j].text+'</span></li>'+
-                '<li>URL: <span class="url">'+trails[i].steps[j].url+'</span></li>'+
-                '<li>Tags: <span class="tags">'+trails[i].steps[j].tags+'</span></li>'+
-                '<li class="hide id">'+trails[i].steps[j]._id+'</li>'+
-            '</ul>';
-        }
-
-        var htmlToAdd = '<div class="col-md-4 trail">'+
-            '<h1 class="title">'+trails[i].title+'</h1>'+
-            stepsInTrail +
-            '<button type="button" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
-            '<button type="button" id="'+trails[i]._id+'" onclick="deleteStep(event)">Delete Trail</button>'+
-            '<button type="button" data-toggle="modal" data-target="#editModal"">Edit Step</button>'+
-        '</div>';
-*/
-
-.sidebarholder.row {
-    background-color: mediumspringgreen;
+body {
+	font-family: font-family: 'Oswald', sans-serif;
+	font-weight: 300;
 }
+h1 {
+	font-family: 'Oswald', sans-serif;
+	font-weight: 400;
+}
+
+p {
+	font-family: font-family: 'Oswald', sans-serif;
+	font-weight: 300;
+}
+
+.btn {
+	font-family: font-family: 'Oswald', sans-serif;
+	font-weight: 300;
+}
+
+.panel-heading {
+	font-family: 'Oswald', sans-serif;
+	font-weight: 400;
+}
+
+.container{
+	max-height: 100%;
+	position: absolute;
+	right: 0;
+	background-color: lightyellow;
+	overflow: auto;
+}
+
+.container.toggled{
+	visibility: hidden;
+}
+
+.step-holder {
+	background-color: mediumspringgreen;
+	z-index: 99;
+}
+
+#main {
+	background-color: grey;
+	margin-bottom: 4%;
+
+}
+

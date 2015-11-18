@@ -6,6 +6,10 @@
     "icons": {
         "128": "icons/icon128.png"
     },
+    "browser_action": {
+        "default_icon": "icons/icon128.png",
+        "default_title": "Trialz"
+    },
     "content_scripts": [
         {
             "matches": [
@@ -19,7 +23,7 @@
             "css": [ 
                 "css/boostrap-3_3_5.css",
                 "css/style.css"
-            ]
+             ]
         }
     ],
     "background": {
@@ -28,7 +32,7 @@
             "scripts/jquery.js",
             "scripts/boostrap-3_3_5.js"
          ],
-         "css": [ "css/bootstrap-3_3_5.css"],
+         "css": [ "css/boostrap-3_3_5.css" ],
          "persistant": true
         
     },

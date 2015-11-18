@@ -1,5 +1,5 @@
 var currentTrail;
-var localhost = 'https://trailz-server.herokuapp.com/'
+var localhost = 'http://trailz-server.herokuapp.com'
 
 chrome.runtime.onConnect.addListener(function(port) {
   console.assert(port.name == "trailpath");
@@ -84,8 +84,6 @@ chrome.runtime.onConnect.addListener(function(port) {
   });
 });
 
-
-
 // CUSTOM JS FILE //
 
 
@@ -93,6 +91,7 @@ function init() {
   renderTrailMap();
 }
 
+// chrome.browserAction.onClicked.addListener(function());
     
 function renderTrailMap() {
     console.log("render that shit");
@@ -114,6 +113,24 @@ function renderTrailMap() {
     })
 };
 
+function deleteStep(event){
+    var targetedId = event.target.id;
+    console.log('the trail to delete is ' + targetedId);
+
+    // now, let's call the delete route with AJAX
+    jQuery.ajax({
+        url : '/api/delete/trail/'+targetedId,
+        dataType : 'json',
+        success : function(response) {
+            // now, let's re-render the steps
+
+            renderTrailMap();
+
+        }
+    })
+
+    event.preventDefault();
+}
 
 // edit form button event
 // when the form is submitted (with a new animal edit), the below runs
@@ -196,21 +213,3 @@ function renderTrailMap() {
 // })
 
 
-function deleteStep(event){
-    var targetedId = event.target.id;
-    console.log('the trail to delete is ' + targetedId);
-
-    // now, let's call the delete route with AJAX
-    jQuery.ajax({
-        url : '/api/delete/trail/'+targetedId,
-        dataType : 'json',
-        success : function(response) {
-            // now, let's re-render the steps
-
-            renderTrailMap();
-
-        }
-    })
-
-    event.preventDefault();
-}
