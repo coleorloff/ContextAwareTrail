@@ -86,7 +86,6 @@ chrome.runtime.onConnect.addListener(function(port) {
 
 // CUSTOM JS FILE //
 
-
 function init() {
   renderTrailMap();
 }

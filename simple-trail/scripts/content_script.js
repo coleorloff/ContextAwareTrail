@@ -3,28 +3,27 @@ var site;
 var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
-var first = false;
+var first = true;
 
-// Talking to POPUP.js
-
+// Talking to POPUP.js // This is popping open and closing the Trailz div in your window from the extension icon
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        if(request.message == "clicked_button_in_popup" && !first && !open) {
+        if(request.message == "clicked_button_in_popup" && first && !open) {
             loadEx();
             displayTrail();
             first = !first;
             open = !open;
             console.log(open);
         } else if (request.message == "clicked_button_in_popup"){
-            poof();
+            toggleContainer();
             open = !open;
-            if (open){
+            if (!open){
                 console.log("hiding the stash!");
-            } else {
+            } else if (open) {
                 console.log("opening your drawer, sir");
             }
         } else {
-            poof();
+            toggleContainer();
             console.log("hiding the stash");
             open = !open;
 
@@ -34,29 +33,8 @@ chrome.runtime.onMessage.addListener(
 
 ///MAIN DOCUMENT FUNCTION////
 $(document).ready(function(){
-    toggleContainer();
+    toggleTrail();
 });
-
-function toggleTrail(){
-    $('body').on('click', '#display-trail', function(e){
-        if (!open){
-            renderTrail(); 
-            open = true;
-            console.log("your drawer is open, sir.")
-        } else {
-            console.log("hiding the stash")
-            shrinkTrail();
-            open = false;
-        }
-    });
-};
-
-function toggleContainer(){
-    $('body').on('click', '#toggler', function(e){
-        e.preventDefault();
-        $(".container").toggleClass("toggled");
-    });
-};
 
 function loadEx(){
     var host = window.location.hostname;
@@ -66,8 +44,7 @@ function loadEx(){
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
     $('<div class="container">'+'</div>').prependTo(pageBody);
-    $('<div id="trail-holder">'+'</div>').appendTo('.container');
-    $('<button id="toggler">Toggle</button>').prependTo(pageBody);
+    $('<div class="holder" id="trail-holder">'+'</div>').appendTo('.container');
         var htmlToAdd = 
             '<div class="menu" id="main">'+
             '<h1> MAIN MENUISH THING</h1>'+
@@ -94,16 +71,15 @@ function displayTrail(){
     });
 }
 
-function poof(){
+function toggleContainer(){
    $('.container').toggleClass('toggled');
 }
 
-function shrinkTrail(){
-  $('body').on('click', '#display-trail', function(e){
-    e.preventDefault();
-    $("#trail-holder").empty();
-});
-}
+function toggleTrail(){
+    $('body').on('click', '#display-trail', function(e){
+        $('.holder').toggleClass('hidden')
+    });
+};
 
 $('body').on('click', '#add-trail', function(e){
     console.log('submitting once');
@@ -268,15 +244,5 @@ function saveText(e){
 
 }
 
-function colorMePretty(trails){
-  for(var i=0;i<trails.length;i++){
-        var tagGroup = '';
-        for(var j=0;j<trails[i].steps.length;j++){
-            tagGroup += trails[i].steps[j].tags;
-        }
-    }
-    return(tagGroup);
-    console.log("TAG GROUP: "+tagGroup);
-};
 
 

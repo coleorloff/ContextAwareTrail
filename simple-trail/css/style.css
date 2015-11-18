@@ -35,8 +35,8 @@ p {
 	visibility: hidden;
 }
 
-.toggled{
-	visibility: none;
+.holder.hidden{
+	visibility: hidden;
 }
 
 .step-holder {
