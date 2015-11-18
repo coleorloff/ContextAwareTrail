@@ -3,22 +3,31 @@ var site;
 var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
-var first = true;
+var first = false;
 
 // Talking to POPUP.js
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        if(first && !open && request.message == "clicked_button_in_popup") {
-            first = false;
+        if(request.message == "clicked_button_in_popup" && !first && !open) {
             loadEx();
             displayTrail();
-        } else if (!first && !open && request.message == "clicked_button_in_popup"){
-           toggleTrail();
-            console.log("display trailz!!!!");
+            first = !first;
+            open = !open;
+            console.log(open);
+        } else if (request.message == "clicked_button_in_popup"){
+            poof();
+            open = !open;
+            if (open){
+                console.log("hiding the stash!");
+            } else {
+                console.log("opening your drawer, sir");
+            }
         } else {
+            poof();
             console.log("hiding the stash");
-            toggleTrail();
+            open = !open;
+
         }
         chrome.runtime.sendMessage({"message":"open_new_tab"})
 })
@@ -79,16 +88,14 @@ function displayTrail(){
             console.log ("status returned success on returned to server");
             console.log ("now render msg.response --> "+ msg.res);
             renderTrail(msg.res);
-                       
-
         }
       else if (msg.question == "Madame who?")
         port.postMessage({"answer": "Madame... Bovary"});
     });
 }
 
-function hideTrail(){
-   $('.container').toggleClass('.toggled');
+function poof(){
+   $('.container').toggleClass('toggled');
 }
 
 function shrinkTrail(){
