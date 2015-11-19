@@ -34,6 +34,7 @@ chrome.runtime.onMessage.addListener(
 ///MAIN DOCUMENT FUNCTION////
 $(document).ready(function(){
     toggleTrail();
+    plusOne();
 });
 
 function loadEx(){
@@ -44,18 +45,28 @@ function loadEx(){
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
     $('<div id="trailex" class="container">'+'</div>').prependTo(pageBody);
-    $('<div class="holder" id="trail-holder">'+'</div>').appendTo('.container');
+    $('<div class="holder" id="trail-holder">'+'</div>').appendTo('#trailex');
         var htmlToAdd = 
             '<div class="menu" id="main">'+
-            '<h1> MAIN MENUISH THING</h1>'+
-            '<div class="btn-group">'+
-            '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
-            '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
-            '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
+                    '<h1> Az </h1>'+
+                        '<div class="btn-group btn-group-xs">'+
+                            '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
+                            '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
+                            '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
+                        '</div>'+
             '</div>'+
+                '<div id="tagTicker">'+
+                    '<div class="panel panel-default" id="tag-stream">'+
+                        '<span class="label label-success">Tags will</span>'+
+                        '<span class="label label-info">go</span>'+
+                        '<span class="label label-primary">here</span>'+
+                        '<span class="label label-warning">here</span>'+
+                        '<span class="label label-warning">here</span>'+
+                        '<span class="label label-info" id="add-tag">+</span>'+
+                    '</div>'+
             '</div>';
 
-    jQuery('.container').prepend(htmlToAdd);
+    jQuery('#trailex').prepend(htmlToAdd);
 }
 
 function displayTrail(){
@@ -75,7 +86,7 @@ function renderTrail(trails){
 
     var htmlToAdd = "";
            
-    jQuery('.container').append(htmlToAdd);
+    jQuery('.trailex').append(htmlToAdd);
 
     // first, make sure the #animal-holder is empty
     jQuery('#trail-holder').empty();
@@ -110,7 +121,7 @@ function renderTrail(trails){
 }
 
 function toggleContainer(){
-   $('.container').toggleClass('toggled');
+   $('#trailex').toggleClass('toggled');
 }
 
 function toggleTrail(){
@@ -118,6 +129,12 @@ function toggleTrail(){
         $('.holder').toggleClass('hidden')
     });
 };
+
+function plusOne(){
+     $('body').on('click', '#add-tag', function(e){
+        $('#tag-stream').append('<span class="label label-danger">NEW!</span>')
+    });
+}
 
 $('body').on('click', '#add-trail', function(e){
     console.log('submitting once');

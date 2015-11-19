@@ -10,18 +10,31 @@
 	z-index: 99999999999999;
 }
 
+#trailex h1{
+	font-family: font-family: 'Oswald', sans-serif;
+	font-weight: 400;
+}
+
+#trailex.container.toggled{
+	visibility: hidden;
+}
+
 #trailex .btn {
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
 }
 
+#trailex .btn-group{
+}
+
+#trailex .label{
+	display: inline-block;
+	margin: 2px;
+}
+
 #trailex .panel-heading {
 	font-family: 'Oswald', sans-serif;
 	font-weight: 400;
-}
-
-#trailex .container.toggled{
-	visibility: hidden;
 }
 
 #trailex .holder.hidden{
@@ -32,8 +45,7 @@
 	z-index: 99;
 }
 
-#trailex #main {
-	margin-bottom: 4%;
-
+#trailex #main{
+	margin-bottom: 10px;
 }
 
