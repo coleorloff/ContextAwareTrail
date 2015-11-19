@@ -1,9 +1,8 @@
 #trailex.container{
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
-	max-height: 100%;
 	max-width: 35%;
-	position: absolute;
+	position: fixed;
 	right: 0;
 	background-color: lightyellow;
 	overflow: auto;
