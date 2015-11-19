@@ -58,29 +58,29 @@ chrome.runtime.onConnect.addListener(function(port) {
       		console.log("display trail");
     	}
       if (msg.add == "step"){
-        console.log('we are in step')
-        console.log(msg.data);
-         jQuery.ajax({
-            url : localhost + '/api/create/step',
-            dataType : 'json',
-            type : 'POST',
-            // we send the data in a data object (with key/value pairs)
-            data : msg.data,
-            success : function(response){
-                if(response.status=="OK"){
-                    port.postMessage({step: "step added"});
-                }
-                else {
-                    alert("something went wrong");
-                }
-            },
-            error : function(err){
-                // do error checking
-                alert("something went wrong");
-                console.error(err);
-            }
-        }); 
-      	console.log("in background add step");
+          console.log('we are in step')
+          console.log("step to add --> "+msg.data);
+          jQuery.ajax({
+              url : localhost + '/api/create/step',
+              dataType : 'json',
+              type : 'POST',
+              // we send the data in a data object (with key/value pairs)
+              data : msg.data,
+              success : function(response){
+                  if(response.status=="OK"){
+                      port.postMessage({step: "step added"});
+                  }
+                  else {
+                      alert("step went wrong in DB");
+                  }
+              },
+              error : function(err){
+                  // do error checking
+                  alert("step wasn't added went wrong");
+                  console.error(err);
+              }
+          }); 
+        
       }
 
 /////added tag search from alchemy which isn't fucking working///////

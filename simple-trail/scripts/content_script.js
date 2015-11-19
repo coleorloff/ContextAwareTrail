@@ -4,7 +4,7 @@ var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
 var first = true;
-var alchemyTags;
+var tagString;
 
 // Talking to POPUP.js // This is popping open and closing the Trailz div in your window from the extension icon
 chrome.runtime.onMessage.addListener(
@@ -128,15 +128,16 @@ $('body').on('click', '#add-trail', function(e){
     console.log('submitting once');
     var pageURL = window.location.href; 
     var host = window.location.hostname;
+    var title = $(document).find("title").text();
     // first, let's pull out all the values
     // the name form field value
     // var text = jQuery("#text").val();
     var data = {
         trailTitle: "First Trail",
-        title: host,
+        title: title,
         text: "text",
         url: pageURL,
-        tags: alchemyTags
+        tags: tagString
     };
 
     console.log("Object to be created in the DB = " + JSON.stringify(data));
@@ -165,12 +166,15 @@ $('body').on('click', '#add-step', function(e){
     console.log('addStep submitting once');
     // first, let's pull out all the values
     // the name form field value
+
     var pageURL = window.location.href; 
+    var title = $(document).find("title").text();
+
     var data = {
         trailId: currentTrail,
-        title: "step-title",
+        title: title,
         text: "step-text",
-        tags: alchemyTags,
+        tags: tagString,
         url: pageURL   
     };
 
@@ -240,7 +244,7 @@ function getTags(url){
         if (msg.search == "alchemy tags returned"){
             // console.log (msg.search);
             console.log ("tags returned to content script from alchemy -->" + msg.tags)
-            alchemyTags = msg.tags;
+            tagsToString(msg.tags);
             port.postMessage({"search": "search tags"});
             console.log("in the search for DB tags");
         }
@@ -252,6 +256,13 @@ function getTags(url){
 
         }
     });
+}
+
+function tagsToString(array){
+   
+    for (var i = 0 ; i< array.length; i++){
+        tagString = tagString + array[i] +","
+    }
 }
 
 function trackTrailId(trails){
