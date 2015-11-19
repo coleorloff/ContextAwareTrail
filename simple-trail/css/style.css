@@ -1,4 +1,4 @@
-.container{
+#trailex.container{
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
 	max-height: 100%;
@@ -10,29 +10,29 @@
 	z-index: 99999999999999;
 }
 
-.btn {
+#trailex .btn {
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
 }
 
-.panel-heading {
+#trailex .panel-heading {
 	font-family: 'Oswald', sans-serif;
 	font-weight: 400;
 }
 
-.container.toggled{
+#trailex .container.toggled{
 	visibility: hidden;
 }
 
-.holder.hidden{
+#trailex .holder.hidden{
 	visibility: hidden;
 }
 
-.step-holder {
+#trailex .step-holder {
 	z-index: 99;
 }
 
-#main {
+#trailex #main {
 	margin-bottom: 4%;
 
 }

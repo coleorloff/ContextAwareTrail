@@ -43,7 +43,7 @@ function loadEx(){
     
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
-    $('<div class="container">'+'</div>').prependTo(pageBody);
+    $('<div id="trailex" class="container">'+'</div>').prependTo(pageBody);
     $('<div class="holder" id="trail-holder">'+'</div>').appendTo('.container');
         var htmlToAdd = 
             '<div class="menu" id="main">'+

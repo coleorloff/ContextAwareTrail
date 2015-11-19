@@ -59,8 +59,10 @@ chrome.runtime.onConnect.addListener(function(port) {
   		console.log("display trail");
   	}
     if (msg.add == "step"){
+      console.log('we are in step')
+      console.log(msg.data);
        jQuery.ajax({
-          url : '/api/create/step',
+          url : localhost + '/api/create/step',
           dataType : 'json',
           type : 'POST',
           // we send the data in a data object (with key/value pairs)
