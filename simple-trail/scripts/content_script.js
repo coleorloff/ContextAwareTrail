@@ -34,6 +34,7 @@ chrome.runtime.onMessage.addListener(
 ///MAIN DOCUMENT FUNCTION////
 $(document).ready(function(){
     toggleTrail();
+
 });
 
 function loadEx(){
@@ -43,6 +44,8 @@ function loadEx(){
     
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
+    getTags(pageURL);
+
     $('<div id="trailex" class="container">'+'</div>').prependTo(pageBody);
     $('<div class="holder" id="trail-holder">'+'</div>').appendTo('.container');
         var htmlToAdd = 
@@ -223,7 +226,31 @@ function renderSteps(steps){
 
 // after the display function has been called render the response from the background script to the page
 // This is where the trails are injected into the page
+function getTags(url){
+    console.log("get tags fired");
+    // var pageURL = window.location.href;  
+    var data = {
+        trailId: currentTrail,
+        title: "step-title",
+        text: "step-text",
+        tags: "step-tags",
+        url:  url
+    };
 
+    console.log("get tags data: " + data);
+ port.postMessage({"search": "find tags", "data": data});
+    port.onMessage.addListener(function(msg) {
+        if (msg.search == "alchemy tags returned"){
+            // console.log (msg.search);
+            console.log ("tags returned to content script from alchemy -->" + msg.tags)
+            port.postMessage({"search": "search tags"});
+            console.log("in the search for DB tags");
+        }
+        if (msg.search == "relevant steps returned"){
+            console.log("awesome we got tags!"+msg.taggedsteps)
+        }
+    });
+}
 
 function trackTrailId(trails){
     console.log('the main trail id to add a step to is ' + trails[0]._id);
