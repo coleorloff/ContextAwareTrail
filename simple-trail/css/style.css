@@ -1,15 +1,13 @@
-body {
+.container{
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
-}
-h1 {
-	font-family: 'Oswald', sans-serif;
-	font-weight: 400;
-}
-
-p {
-	font-family: font-family: 'Oswald', sans-serif;
-	font-weight: 300;
+	max-height: 100%;
+	max-width: 35%;
+	position: absolute;
+	right: 0;
+	background-color: lightyellow;
+	overflow: auto;
+	z-index: 99999999999999;
 }
 
 .btn {
@@ -20,15 +18,6 @@ p {
 .panel-heading {
 	font-family: 'Oswald', sans-serif;
 	font-weight: 400;
-}
-
-.container{
-	max-height: 100%;
-	max-width: 35%;
-	position: absolute;
-	right: 0;
-	background-color: lightyellow;
-	overflow: auto;
 }
 
 .container.toggled{

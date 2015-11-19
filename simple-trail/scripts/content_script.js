@@ -71,6 +71,44 @@ function displayTrail(){
     });
 }
 
+function renderTrail(trails){
+
+    var htmlToAdd = "";
+           
+    jQuery('.container').append(htmlToAdd);
+
+    // first, make sure the #animal-holder is empty
+    jQuery('#trail-holder').empty();
+
+    // loop through all the steps and add them in the animal-holder div
+    for(var i=0;i<trails.length;i++){
+        var stepsInTrail = '';
+        for(var j=0;j<trails[i].steps.length;j++){
+            stepsInTrail += 
+            '<div class="step-holder">'+
+                '<div class="panel panel-default">'+
+                    '<div class="panel-heading">'+trails[i].title+'</div>'+
+                        '<div class="panel-body>'+
+                            '<ul class="list-group">'+
+                                '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
+                                '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
+                                '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
+                                '<li class="list-group-item" id="tags">'+colorTags(trails[i].steps[j].tags)+'</span></li>'+
+                                '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
+                            '</div>'
+                        '<div class="btn-group">'+
+                            '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
+                            '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="deleteStep(event)">Delete Trail</button>'+
+                            '<button type="button" class="btn btn-group" data-toggle="modal" data-target="#editModal"">Edit Step</button>'+
+                        '</div>'+
+                '</div>'+
+            '</div>';
+        }
+        jQuery('#trail-holder').append(stepsInTrail);
+    }
+    trackTrailId(trails);
+}
+
 function toggleContainer(){
    $('.container').toggleClass('toggled');
 }
@@ -185,50 +223,7 @@ function renderSteps(steps){
 
 // after the display function has been called render the response from the background script to the page
 // This is where the trails are injected into the page
-function renderTrail(trails){
 
-    var htmlToAdd = 
-           
-    jQuery('.container').append(htmlToAdd);
-
-    // first, make sure the #animal-holder is empty
-    jQuery('#trail-holder').empty();
-
-    // loop through all the steps and add them in the animal-holder div
-    for(var i=0;i<trails.length;i++){
-
-        var stepsInTrail = '';
-        for(var j=0;j<trails[i].steps.length;j++){
-            stepsInTrail += 
-            '<div class="step-holder">'+
-
-            '<div class="panel panel-default">'+
-
-            '<div class="panel-heading">'+trails[i].title+'</div>'+
-            '<div class="panel-body>'+
-            '<ul class="list-group">'+
-                '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
-                '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
-                '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
-                '<li class="list-group-item" id="tags"> Tags: '+trails[i].steps[j].tags+'</span></li>'+
-                '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
-                '</div>'
-            '<div class="btn-group">'+
-            '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
-            '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="deleteStep(event)">Delete Trail</button>'+
-            '<button type="button" class="btn btn-group" data-toggle="modal" data-target="#editModal"">Edit Step</button>'+
-            '</div>'+
-
-            '</div>'+
-
-            '</div>';
-        }
-
-        jQuery('#trail-holder').append(stepsInTrail);
-
-    }
-    trackTrailId(trails);
-}
 
 function trackTrailId(trails){
     console.log('the main trail id to add a step to is ' + trails[0]._id);
@@ -241,8 +236,32 @@ function trackTrailId(trails){
 function saveText(e){
     console.log('this is where you save some text')
     e.preventDefault();
-
 }
+
+function colorTags(tags){
+    
+
+        $('#tags').append('<span class="label label-success">'+tags+'</span>')
+
+    console.log(tags);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
