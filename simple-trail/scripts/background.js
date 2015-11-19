@@ -96,7 +96,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                   for(var i = 0; i < response.keywords.length; i++){
                       keywordlist.push(response.keywords[i].text);
                   }
-                  for (var i=0;i<5;i++){
+                  for (var i=0;i<keywordlist.length;i++){
                       if(i<4){
                           tags = tags + keywordlist[i]+",";
                       } else { tags = tags + keywordlist[i]; }

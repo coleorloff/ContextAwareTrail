@@ -4,6 +4,7 @@ var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
 var first = true;
+var alchemyTags;
 
 // Talking to POPUP.js // This is popping open and closing the Trailz div in your window from the extension icon
 chrome.runtime.onMessage.addListener(
@@ -66,8 +67,9 @@ function displayTrail(){
     port.onMessage.addListener(function(msg) {
         if (msg.status == "Ok"){
             console.log ("status returned success on returned to server");
-            console.log ("now render msg.response --> "+ msg.res);
-            renderTrail(msg.res);
+            console.log ("now render msg.response --> "+ JSON.stringify(msg.res));
+            trackTrailId(msg.res);
+            // renderTrail(msg.res);
         }
       else if (msg.question == "Madame who?")
         port.postMessage({"answer": "Madame... Bovary"});
@@ -75,7 +77,7 @@ function displayTrail(){
 }
 
 function renderTrail(trails){
-
+    // trackTrailId(trails);
     var htmlToAdd = "";
            
     jQuery('.container').append(htmlToAdd);
@@ -109,7 +111,7 @@ function renderTrail(trails){
         }
         jQuery('#trail-holder').append(stepsInTrail);
     }
-    trackTrailId(trails);
+    
 }
 
 function toggleContainer(){
@@ -134,7 +136,7 @@ $('body').on('click', '#add-trail', function(e){
         title: host,
         text: "text",
         url: pageURL,
-        tags: "tags"
+        tags: alchemyTags
     };
 
     console.log("Object to be created in the DB = " + JSON.stringify(data));
@@ -163,22 +165,17 @@ $('body').on('click', '#add-step', function(e){
     console.log('addStep submitting once');
     // first, let's pull out all the values
     // the name form field value
-
+    var pageURL = window.location.href; 
     var data = {
         trailId: currentTrail,
         title: "step-title",
         text: "step-text",
-        tags: "step-tags",
-        url: "step-url"   
+        tags: alchemyTags,
+        url: pageURL   
     };
 
-    console.log("Object to be created in the DB = " + JSON.stringify(data));
+    console.log("Step to be created in the DB = " + JSON.stringify(data));
 
-   
-                // jQuery("#addStep input").val('');
-                // jQuery("#addStep").hide();
-                // jQuery("#step-submit").hide();
-                // renderTrailMap();
       addStep(data);   
       e.preventDefault();
       return false;
@@ -238,16 +235,21 @@ function getTags(url){
     };
 
     console.log("get tags data: " + data);
- port.postMessage({"search": "find tags", "data": data});
+    port.postMessage({"search": "find tags", "data": data});
     port.onMessage.addListener(function(msg) {
         if (msg.search == "alchemy tags returned"){
             // console.log (msg.search);
             console.log ("tags returned to content script from alchemy -->" + msg.tags)
+            alchemyTags = msg.tags;
             port.postMessage({"search": "search tags"});
             console.log("in the search for DB tags");
         }
         if (msg.search == "relevant steps returned"){
             console.log("awesome we got tags!"+msg.taggedsteps)
+            
+            renderTrail(msg.taggedsteps);
+            
+
         }
     });
 }
