@@ -98,7 +98,7 @@ function renderTrail(trails){
                                 '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
                                 '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
                                 '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
-                                '<li class="list-group-item" id="tags">'+colorTags(trails[i].steps[j].tags)+'</span></li>'+
+            
                                 '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
                             '</div>'
                         '<div class="btn-group">'+
