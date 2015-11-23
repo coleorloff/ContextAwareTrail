@@ -4,6 +4,7 @@ var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
 var first = true;
+var tagString;
 
 // Talking to POPUP.js // This is popping open and closing the Trailz div in your window from the extension icon
 chrome.runtime.onMessage.addListener(
@@ -34,6 +35,7 @@ chrome.runtime.onMessage.addListener(
 ///MAIN DOCUMENT FUNCTION////
 $(document).ready(function(){
     toggleTrail();
+
     plusOne();
 });
 
@@ -44,6 +46,8 @@ function loadEx(){
     
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
+    getTags(pageURL);
+
     $('<div id="trailex" class="container">'+'</div>').prependTo(pageBody);
     $('<div class="holder" id="trail-holder">'+'</div>').appendTo('#trailex');
         var htmlToAdd = 
@@ -74,8 +78,9 @@ function displayTrail(){
     port.onMessage.addListener(function(msg) {
         if (msg.status == "Ok"){
             console.log ("status returned success on returned to server");
-            console.log ("now render msg.response --> "+ msg.res);
-            renderTrail(msg.res);
+            console.log ("now render msg.response --> "+ JSON.stringify(msg.res));
+            trackTrailId(msg.res);
+            // renderTrail(msg.res);
         }
       else if (msg.question == "Madame who?")
         port.postMessage({"answer": "Madame... Bovary"});
@@ -83,7 +88,7 @@ function displayTrail(){
 }
 
 function renderTrail(trails){
-
+    // trackTrailId(trails);
     var htmlToAdd = "";
            
     jQuery('.trailex').append(htmlToAdd);
@@ -104,7 +109,7 @@ function renderTrail(trails){
                                 '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
                                 '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
                                 '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
-                                '<li class="list-group-item" id="tags">'+colorTags(trails[i].steps[j].tags)+'</span></li>'+
+            
                                 '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
                             '</div>'
                         '<div class="btn-group">'+
@@ -117,7 +122,7 @@ function renderTrail(trails){
         }
         jQuery('#trail-holder').append(stepsInTrail);
     }
-    trackTrailId(trails);
+    
 }
 
 function toggleContainer(){
@@ -140,15 +145,16 @@ $('body').on('click', '#add-trail', function(e){
     console.log('submitting once');
     var pageURL = window.location.href; 
     var host = window.location.hostname;
+    var title = $(document).find("title").text();
     // first, let's pull out all the values
     // the name form field value
     // var text = jQuery("#text").val();
     var data = {
         trailTitle: "First Trail",
-        title: host,
+        title: title,
         text: "text",
         url: pageURL,
-        tags: "tags"
+        tags: tagString
     };
 
     console.log("Object to be created in the DB = " + JSON.stringify(data));
@@ -178,21 +184,19 @@ $('body').on('click', '#add-step', function(e){
     // first, let's pull out all the values
     // the name form field value
 
+    var pageURL = window.location.href; 
+    var title = $(document).find("title").text();
+
     var data = {
         trailId: currentTrail,
-        title: "step-title",
+        title: title,
         text: "step-text",
-        tags: "step-tags",
-        url: "step-url"   
+        tags: tagString,
+        url: pageURL   
     };
 
-    console.log("Object to be created in the DB = " + JSON.stringify(data));
+    console.log("Step to be created in the DB = " + JSON.stringify(data));
 
-   
-                // jQuery("#addStep input").val('');
-                // jQuery("#addStep").hide();
-                // jQuery("#step-submit").hide();
-                // renderTrailMap();
       addStep(data);   
       e.preventDefault();
       return false;
@@ -240,7 +244,43 @@ function renderSteps(steps){
 
 // after the display function has been called render the response from the background script to the page
 // This is where the trails are injected into the page
+function getTags(url){
+    console.log("get tags fired");
+    // var pageURL = window.location.href;  
+    var data = {
+        trailId: currentTrail,
+        title: "step-title",
+        text: "step-text",
+        tags: "step-tags",
+        url:  url
+    };
 
+    console.log("get tags data: " + data);
+    port.postMessage({"search": "find tags", "data": data});
+    port.onMessage.addListener(function(msg) {
+        if (msg.search == "alchemy tags returned"){
+            // console.log (msg.search);
+            console.log ("tags returned to content script from alchemy -->" + msg.tags)
+            tagsToString(msg.tags);
+            port.postMessage({"search": "search tags"});
+            console.log("in the search for DB tags");
+        }
+        if (msg.search == "relevant steps returned"){
+            console.log("awesome we got tags!"+msg.taggedsteps)
+            
+            renderTrail(msg.taggedsteps);
+            
+
+        }
+    });
+}
+
+function tagsToString(array){
+   
+    for (var i = 0 ; i< array.length; i++){
+        tagString = tagString + array[i] +","
+    }
+}
 
 function trackTrailId(trails){
     console.log('the main trail id to add a step to is ' + trails[0]._id);
