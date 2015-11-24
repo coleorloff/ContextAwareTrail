@@ -44,7 +44,8 @@
         "tabs",
         "<all_urls>",
         "http://localhost/*",
-        "contextMenus"
+        "contextMenus",
+        "bookmarks"
     ],
     "web_accessible_resources": [
         "manifest.json"
