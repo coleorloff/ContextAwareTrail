@@ -1,5 +1,5 @@
 var currentTrail;
-var localhost = 'http://sudosubdocs.herokuapp.com'
+var localhost = 'http://trailz-server.herokuapp.com'
 var tags = [];
 
 chrome.runtime.onConnect.addListener(function(port) {
