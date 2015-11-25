@@ -25,13 +25,13 @@ chrome.runtime.onConnect.addListener(function(port) {
                   // jQuery("#addTrail input").val('');
               }
               else {
-                  alert("something went wrong");
+                  alert("something went wrong in Add Listener Success");
               }
           },
           error : function(err){
               // do error checking
               port.postMessage({"status": "error" });
-              alert("something went wrong");
+              alert("something went wrong in Add Listener Error");
               console.error(err);
           }
         })
@@ -126,7 +126,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                   },
                   error : function(err){
                       // do error checking
-                      alert("something went wrong");
+                      alert("something went wrong in Seach Tags Error");
                       console.error(err);
                   }
               });
