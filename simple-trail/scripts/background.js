@@ -2,6 +2,15 @@ var currentTrail;
 var localhost = 'http://sudosubdocs.herokuapp.com'
 var tags = [];
 
+chrome.bookmarks.getTree(function(response){
+    console.log("bookmarks tree -->"+JSON.stringify(response));
+
+});
+
+function bookmarkTree(response){
+  console.log("bookmarks tree -->"+response);
+}
+
 chrome.runtime.onConnect.addListener(function(port) {
 
   console.assert(port.name == "trailpath");
