@@ -14,7 +14,6 @@ chrome.runtime.onMessage.addListener(
             displayTrail();
             first = !first;
             open = !open;
-            console.log(open);
         } else if (request.message == "clicked_button_in_popup"){
             toggleContainer();
             open = !open;
@@ -93,6 +92,8 @@ function renderTrail(trails){
     jQuery('.trailex').append(htmlToAdd);
 
     // first, make sure the #animal-holder is empty
+    //...but maybe not. this was causing the trail-holder div to appear on 
+    //open and then immediately and irreversibly disappear. 
     jQuery('#trail-holder').empty();
 
     // loop through all the steps and add them in the animal-holder div
@@ -107,8 +108,8 @@ function renderTrail(trails){
                             '<ul class="list-group">'+
                                 '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
                                 '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
+                                '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].tags+'</span></li>'+
                                 '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
-            
                                 '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
                             '</div>'
                         '<div class="btn-group">'+
@@ -119,9 +120,8 @@ function renderTrail(trails){
                 '</div>'+
             '</div>';
         }
-        jQuery('#trail-holder').append(stepsInTrail);
-    }
-    
+    jQuery('#trail-holder').append(stepsInTrail);
+    }   
 }
 
 //on Browser Action button click --> opens the extension in the window
@@ -136,7 +136,7 @@ function toggleTrail(){
 };
 //adds a new label to the list of tags
 function plusOne(){
-     $('body').on('click', '#add-tag', function(e){
+    $('body').on('click', '#add-tag', function(e){
         $('#tag-stream').append('<span class="label label-danger">NEW!</span>')
     });
 }
@@ -246,7 +246,8 @@ function renderSteps(steps){
 // This is where the trails are injected into the page
 function getTags(url){
     console.log("get tags fired");
-    // var pageURL = window.location.href;  
+    //var pageURL = window.location.href;  
+
     var data = {
         trailId: currentTrail,
         title: "step-title",
@@ -255,22 +256,21 @@ function getTags(url){
         url:  url
     };
 
-    console.log("get tags data: " + data.tags);
     port.postMessage({"search": "find tags", "data": data});
+
     port.onMessage.addListener(function(msg) {
         if (msg.search == "alchemy tags returned"){
             // console.log (msg.search);
             console.log ("tags returned to content script from alchemy -->" + msg.tags)
             tagsToString(msg.tags);
+
             port.postMessage({"search": "search tags"});
             console.log("in the search for DB tags");
         }
         if (msg.search == "relevant steps returned"){
-            console.log("awesome we got tags!"+msg.taggedsteps)
-            
+            console.log("awesome we got tags!" + msg.taggedsteps);
+            //console.log(msg.taggedsteps);
             renderTrail(msg.taggedsteps);
-            
-
         }
     });
 }

@@ -97,12 +97,17 @@ chrome.runtime.onConnect.addListener(function(port) {
                   for(var i = 0; i < response.keywords.length; i++){
                       keywordlist.push(response.keywords[i].text);
                   }
-                  for (var i=0;i<keywordlist.length;i++){
-                      if(i<4){
-                          tags = tags + keywordlist[i]+",";
-                      } else { tags = tags + keywordlist[i]; }
+                  // for (var i=0;i<keywordlist.length;i++){
+                  //     if(i<4){
+                  //         tags = tags + keywordlist[i]+",";
+                  //     } else { tags = tags + keywordlist[i]; }
 
-                  }
+                  // }
+                
+                      
+                 tags = keywordlist;
+
+                  
                   console.log("tags to be searched in db --> "+tags)
                   port.postMessage({"search": "alchemy tags returned", "tags": keywordlist});
               },
@@ -122,8 +127,9 @@ chrome.runtime.onConnect.addListener(function(port) {
                   url : localhost + '/api/search?tags=' + tags,
                   dataType : 'json',
                   success : function(response){
-                      console.log("DB response for tags "+response);
-                      port.postMessage({"search": "relevant steps returned", taggedsteps:response});
+                      console.log("DB response for tags " + response);
+                      console.log(response);
+                      port.postMessage({"search": "relevant steps returned", "taggedsteps": response});
                   },
                   error : function(err){
                       // do error checking
