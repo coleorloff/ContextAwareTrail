@@ -35,7 +35,6 @@ chrome.runtime.onMessage.addListener(
 ///MAIN DOCUMENT FUNCTION////
 $(document).ready(function(){
     toggleTrail();
-
     plusOne();
 });
 
@@ -48,7 +47,7 @@ function loadEx(){
     console.log('hostname -->' + host)
     getTags(pageURL);
 
-    $('<div id="trailex" class="container">'+'</div>').prependTo(pageBody);
+    $('<div class="container" id="trailex" >'+'</div>').prependTo(pageBody);
     $('<div class="holder" id="trail-holder">'+'</div>').appendTo('#trailex');
         var htmlToAdd = 
             '<div class="menu" id="main">'+
@@ -80,7 +79,7 @@ function displayTrail(){
             console.log ("status returned success on returned to server");
             console.log ("now render msg.response --> "+ JSON.stringify(msg.res));
             trackTrailId(msg.res);
-            // renderTrail(msg.res);
+            renderTrail(msg.res);
         }
       else if (msg.question == "Madame who?")
         port.postMessage({"answer": "Madame... Bovary"});
@@ -125,16 +124,17 @@ function renderTrail(trails){
     
 }
 
+//on Browser Action button click --> opens the extension in the window
 function toggleContainer(){
    $('#trailex').toggleClass('toggled');
 }
-
+//on "display trail" button click --> toggles the trail open/closed
 function toggleTrail(){
     $('body').on('click', '#display-trail', function(e){
         $('.holder').toggleClass('hidden')
     });
 };
-
+//adds a new label to the list of tags
 function plusOne(){
      $('body').on('click', '#add-tag', function(e){
         $('#tag-stream').append('<span class="label label-danger">NEW!</span>')
@@ -255,7 +255,7 @@ function getTags(url){
         url:  url
     };
 
-    console.log("get tags data: " + data);
+    console.log("get tags data: " + data.tags);
     port.postMessage({"search": "find tags", "data": data});
     port.onMessage.addListener(function(msg) {
         if (msg.search == "alchemy tags returned"){
@@ -298,7 +298,7 @@ function saveText(e){
 function colorTags(tags){
     
 
-        $('#tags').append('<span class="label label-success">'+tags+'</span>')
+    $('#tags').append('<span class="label label-success">'+tags+'</span>')
 
     console.log(tags);
 };

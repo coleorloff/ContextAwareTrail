@@ -39,6 +39,7 @@ chrome.runtime.onConnect.addListener(function(port) {
       // prevents the form from submitting normally
       // port.postMessage({status: "Ok" }); 		
       if (msg.display == "display trail"){
+        console.log("trying to display trail: ajax up next...")
       	jQuery.ajax({
             url : localhost + '/api/get/trail',
             dataType : 'json',
@@ -51,7 +52,7 @@ chrome.runtime.onConnect.addListener(function(port) {
             },
             error : function(err){
             // do error checking
-              console.log("something went wrong");
+              console.log("something went wrong in Display Trail Error");
               console.error(err);
             }
         });
