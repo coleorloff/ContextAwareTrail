@@ -61,7 +61,7 @@ function loadEx(){
             '</div>'+
                 '<div id="tagTicker">'+
                     '<div class="panel panel-default" id="tag-stream">'+
-                        '<span class="label label-success">Tags will</span>'+
+                        '<span class="label label-test">Tags will</span>'+
                         '<span class="label label-info">go</span>'+
                         '<span class="label label-primary">here</span>'+
                         '<span class="label label-warning">here</span>'+
