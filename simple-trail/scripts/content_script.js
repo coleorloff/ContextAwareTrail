@@ -94,8 +94,7 @@ function displayTrail(){
 
 function renderTrail(trails){
     // trackTrailId(trails);
-    var htmlToAdd = "";
-           
+    var htmlToAdd = "";    
     jQuery('.trailex').append(htmlToAdd);
 
     // first, make sure the #animal-holder is empty
@@ -119,7 +118,7 @@ function renderTrail(trails){
                                 '<li class="list-group-item" id="text"> Notes: '+trails[i].steps[j].text+'</span></li>'+
                                 //needs some function that takes an array of tags
                                 //and puts each tag into a random label type
-                                '<li class="list-group-item" id="text"> Tags: '+trails[i].steps[j].tags+'</span></li>'+
+                                '<li class="list-group-item" id="text"> Tags: '+colorTags(trails[i].steps[j].tags)+'</span></li>'+
                                 //'<li class="list-group-item" id="hide url"> URL:'+trails[i].steps[j].url+'</span></li>'+
                                 //'<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
                             '</div>'
@@ -130,10 +129,10 @@ function renderTrail(trails){
                         '</div>'+
                 '</div>'+
             '</div>';
+            
         }
         jQuery('#trail-holder').append(stepsInTrail);
-    }  
-    colorTags(trails);
+    } 
 }
 
 //on Browser Action button click --> opens the extension in the window
@@ -282,6 +281,9 @@ function getTags(url){
         if (msg.search == "relevant steps returned"){
             console.log("awesome we got tags!" + msg.taggedsteps);
             console.log(msg.taggedsteps);
+
+            //this is where the magic happens
+            //trails with matching tags get displayed
             renderTrail(msg.taggedsteps);
         }
     });
@@ -307,24 +309,23 @@ function saveText(e){
     e.preventDefault();
 }
 
-function rando(){
-    return (Math.round(Math.random())-.5);
-}
+function colorTags(tags){
+    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    var wrappedTags = [];
+    //for each tag
+    //make tag a label
+    //add a random label type to it
 
-function colorTags(trails){
-    var theTags = [];
-    for (var i = 0; i < trails.length; i++){
-        for (var j = 0; j < trails[i].steps.length; j++){
-            theTags = trails[i].steps[j].tags;
-        }
+    for (var i = 0; i < tags.length; i ++){
+       wrappedTags.push('<span class ="label label-success">'+tags[i]+'</span>');
     }
-    console.log("colorTags() logging the Tags: " + theTags);
-    // var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
-    // colors.sort( rando );
-    // $('')
+
+    return wrappedTags;
+   
 };
 
 //trails[i].steps[j].tags
+//'<span class="label label-two">go</span>'+
 
 
 
