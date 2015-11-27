@@ -48,9 +48,47 @@
 	margin-bottom: 10px;
 }
 
-/*add your own label colors here*/
+/*custom btstrp label colors*/
 
-.label-test{
-	background-color: mediumspringgreen;
+.label-one{
+	background-color: #073D1B;
 }
+
+.label-two{
+	background-color: #0E7C37;
+}
+
+.label-three{
+	background-color: #14BC54;
+}
+
+.label-four{
+	background-color: #19E265;
+}
+
+.label-five{
+	background-color: #1BFC70;
+}
+
+.label-six{
+	background-color: #1A3D27;
+}
+
+.label-seven{
+	background-color: #357C4F;
+}
+
+.label-eight{
+	background-color: #51BC78;
+}
+
+.label-nine{
+	background-color: #61E290;
+}
+
+.label-ten{
+	background-color: #6CFCA0;
+}
+
+
 
