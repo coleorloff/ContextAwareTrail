@@ -53,18 +53,21 @@ function loadEx(){
                     '<h1> Az </h1>'+
                         '<div class="btn-group btn-group-xs">'+
                             '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
-                            '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
-                            '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
+                            //creates new "trail" in db, i.e. saves current page with relevent information
+                            //should this become a secondary action??
+                            '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Current Page</button>'+
+                            //should be permenently removed. "steps" no longer exist, as there will not be child-nodes/pages in this view.
+                            //'<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
                         '</div>'+
             '</div>'+
                 '<div id="tagTicker">'+
                     '<div class="panel panel-default" id="tag-stream">'+
-                        '<span class="label label-test">Tags will</span>'+
-                        '<span class="label label-info">go</span>'+
-                        '<span class="label label-primary">here</span>'+
-                        '<span class="label label-warning">here</span>'+
-                        '<span class="label label-warning">here</span>'+
-                        '<span class="label label-info" id="add-tag">+</span>'+
+                        '<span class="label label-one">Tags will</span>'+
+                        '<span class="label label-two">go</span>'+
+                        '<span class="label label-three">here</span>'+
+                        '<span class="label label-four">here</span>'+
+                        '<span class="label label-five">here</span>'+
+                        '<span class="label label-six" id="add-tag">+</span>'+
                     '</div>'+
             '</div>';
 
@@ -78,7 +81,11 @@ function displayTrail(){
             console.log ("status returned success on returned to server");
             console.log ("now render msg.response --> "+ JSON.stringify(msg.res));
             trackTrailId(msg.res);
-            renderTrail(msg.res);
+            //this render all the "trails"
+            //they get rendered a second time in getTags()
+            //that time only the trailz with matching tags are rendered
+            //so we might want to create a seperate function that takes any set of trailz to display.
+            //renderTrail(msg.res);
         }
       else if (msg.question == "Madame who?")
         port.postMessage({"answer": "Madame... Bovary"});
@@ -103,14 +110,18 @@ function renderTrail(trails){
             stepsInTrail += 
             '<div class="step-holder">'+
                 '<div class="panel panel-default">'+
-                    '<div class="panel-heading">'+trails[i].title+'</div>'+
+                ///replaced "trail" title with "step"-title
+                //although technically, we are still displaying a "trail" here.
+                //it just has one "step" in it and that is what's being displayed.
+                    '<div class="panel-heading"><a href="'+trails[i].steps[j].url+'">'+trails[i].steps[j].title+'</a></div>'+
                         '<div class="panel-body>'+
                             '<ul class="list-group">'+
-                                '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
-                                '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
-                                '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].tags+'</span></li>'+
-                                '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
-                                '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
+                                '<li class="list-group-item" id="text"> Notes: '+trails[i].steps[j].text+'</span></li>'+
+                                //needs some function that takes an array of tags
+                                //and puts each tag into a random label type
+                                '<li class="list-group-item" id="text"> Tags: '+trails[i].steps[j].tags+'</span></li>'+
+                                //'<li class="list-group-item" id="hide url"> URL:'+trails[i].steps[j].url+'</span></li>'+
+                                //'<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
                             '</div>'
                         '<div class="btn-group">'+
                             '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
@@ -120,8 +131,9 @@ function renderTrail(trails){
                 '</div>'+
             '</div>';
         }
-    jQuery('#trail-holder').append(stepsInTrail);
-    }   
+        jQuery('#trail-holder').append(stepsInTrail);
+    }  
+    colorTags(trails);
 }
 
 //on Browser Action button click --> opens the extension in the window
@@ -137,7 +149,7 @@ function toggleTrail(){
 //adds a new label to the list of tags
 function plusOne(){
     $('body').on('click', '#add-tag', function(e){
-        $('#tag-stream').append('<span class="label label-danger">NEW!</span>')
+        $('#tag-stream').append('<span class="label label-ten">NEW!</span>')
     });
 }
 
@@ -269,7 +281,7 @@ function getTags(url){
         }
         if (msg.search == "relevant steps returned"){
             console.log("awesome we got tags!" + msg.taggedsteps);
-            //console.log(msg.taggedsteps);
+            console.log(msg.taggedsteps);
             renderTrail(msg.taggedsteps);
         }
     });
@@ -295,13 +307,25 @@ function saveText(e){
     e.preventDefault();
 }
 
-function colorTags(tags){
-    
+function rando(){
+    return (Math.round(Math.random())-.5);
+}
 
-    $('#tags').append('<span class="label label-success">'+tags+'</span>')
-
-    console.log(tags);
+function colorTags(trails){
+    var theTags = [];
+    for (var i = 0; i < trails.length; i++){
+        for (var j = 0; j < trails[i].steps.length; j++){
+            theTags = trails[i].steps[j].tags;
+        }
+    }
+    console.log("colorTags() logging the Tags: " + theTags);
+    // var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    // colors.sort( rando );
+    // $('')
 };
+
+//trails[i].steps[j].tags
+
 
 
 
