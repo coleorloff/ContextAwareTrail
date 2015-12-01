@@ -61,12 +61,8 @@ function loadEx(){
                         '</div>'+
             '</div>'+
                 '<div id="tagTicker">'+
+                //pls insert tags returned from Alchemy here
                     '<div class="panel panel-default" id="tag-stream">'+
-                        '<span class="label label-one">Tags will</span>'+
-                        '<span class="label label-two">go</span>'+
-                        '<span class="label label-three">here</span>'+
-                        '<span class="label label-four">here</span>'+
-                        '<span class="label label-five">here</span>'+
                         '<span class="label label-six" id="add-tag">+</span>'+
                     '</div>'+
             '</div>';
@@ -213,6 +209,10 @@ $('body').on('click', '#add-step', function(e){
       return false;
 });
 
+//we're not using this right now. 
+//"Add Page" creates a new trail (one item long) in the db
+//server-side search function is only searching tags in trails right now
+//that's why this function is redundant
 function addStep(data){
     port.postMessage({"add": "step", "data": data});
     port.onMessage.addListener(function(msg) {
@@ -274,6 +274,8 @@ function getTags(url){
             // console.log (msg.search);
             console.log ("tags returned to content script from alchemy -->" + msg.tags)
             tagsToString(msg.tags);
+            //this function will display the tags that have been returned from Alchemy
+            displayTags(msg.tags)
 
             port.postMessage({"search": "search tags"});
             console.log("in the search for DB tags");
@@ -311,21 +313,35 @@ function saveText(e){
 
 function colorTags(tags){
     var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    var temp = [];
     var wrappedTags = [];
     //for each tag
     //make tag a label
     //add a random label type to it
 
     for (var i = 0; i < tags.length; i ++){
-       wrappedTags.push('<span class ="label label-success">'+tags[i]+'</span>');
+       wrappedTags.push('<span class ="label ' + randomLabelClass() + '">' + tags[i]+'</span>');
     }
 
     return wrappedTags;
-   
 };
 
-//trails[i].steps[j].tags
-//'<span class="label label-two">go</span>'+
+function randomLabelClass(){
+    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    var selected = colors[~~(Math.random()*colors.length)];
+    return selected;
+}
+
+function displayTags(tags){
+    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    var wrappedTags = [];
+    for (var i = 0; i < tags.length; i ++){
+       wrappedTags.push('<span class ="label ' + randomLabelClass() + '">' + tags[i]+'</span>');
+    }
+    $('#tag-stream').append(wrappedTags);
+};
+
+
 
 
 
