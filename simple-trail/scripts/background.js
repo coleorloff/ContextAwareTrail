@@ -10,8 +10,32 @@ chrome.bookmarks.getTree(function(tree){
 function bookmarkTree(tree){
  // depthFirst(tree, 0);
 
-    console.log("Array of Objects = " + JSON.stringify(depthFirst(tree, 0)));
-    console.log("flatChildrenArray length = "+ flatChildrenArray.length)
+    // console.log("Array of Objects = " + JSON.stringify(depthFirst(tree, 0)));
+    // console.log("flatChildrenArray length = "+ flatChildrenArray.length)
+    console.log("bookmarks tree -----------> "+tree)
+    branch = JSON.stringify(tree)
+    jQuery.ajax({
+        url : localhost + '/api/add/bookmarks',
+        dataType : 'json',
+        type : 'POST',
+        // we send the data in a data object (with key/value pairs)
+        data : {
+            tree: branch
+        },
+        success : function(response){
+            if(response.status=="OK"){
+                console.log("data parsing")
+            }
+            else {
+                alert("error response from");
+            }
+        },
+        error : function(err){
+          // do error checking
+            alert("something went wrong");
+            console.error(err);
+        }
+    })
 }
 
 
@@ -72,81 +96,6 @@ function flatChildArrayCheck(treeElement, arrayToCheck){
     }
 }
 
-// function katsattempt(v){
-//     if(!Array.isArray(v)) {
-//         bookmarks.push(v)
-//     }
-//     for var i=0; i<v.length; i++
-//         if v[i] not in bookmarks || Array.isArray(v[i]) {
-//             katsattempt(G,v[i])
-//         }
-    
-// }
-
-// 1  procedure DFS(G,v):
-// 2      label v as discovered
-// 3      for all edges from v to w in G.adjacentEdges(v) do
-// 4          if vertex w is not labeled as discovered then
-// 5              recursively call DFS(G,w)
-
-function getChild(tree){
-    var flatChildren = [];
-    for (var i in tree) {
-        if (Array.isArray(tree)) {
-            console.log("Parent id = " + tree[i].id)
-            chrome.bookmarks.getChildren(tree[i].id, getChild);
-        }
-        else if (!Array.isArray(tree)) {
-            flatChildren.push(tree[i])
-        }
-    }
-    console.log ("flat Children Returned ="+ flatChildren)
-    return function(){console.log("Returned Array of Children" + JSON.stringify(flatChildrenArray))}
-}
-
-function collectChildren(child){
-    flatChildrenArray = flatChildrenArray + child;
-    console.log("Array of Children" + JSON.stringify(flatChildrenArray))
-}
-
-function getObjects(obj, key) {
-    var objects = [];
-
-
-    for (var i in obj) {
-        if (!obj.hasOwnProperty(i)) continue;
-        if (typeof obj[i] == 'object') {
-            // console.log("obj "+i+" = " + JSON.stringify(obj[i]));
-            // objects = objects.concat(getObjects(obj[i], key));
-            // Is it problematic that I am returning an array when I'm trying to get rid of them
-            // not as long as they are getting smaller? Well actually I will always be returning
-            // an array into an array into ... into an array
-            if (Array.isArray(obj[i])){
-                console.log("whittle that array!")
-                objects = objects.concat(getObjects(obj[i], key));
-            }
-            else if (jQuery.isPlainObject(obj[i]) && i !== key) {
-                console.log("push")
-                objects.push(obj)
-            }
-
-        // if (!val == null){
-        //     console.log("val is real!")
-        // //     console.log("val isn't undefined")
-        // //    if (i == key && obj[key] == val) {
-        // //         objects.push(obj);
-        //     }
-        }
-        
-        // else if (i == key) {
-        //     objects.push(obj)
-        //     console.log("key is = children")
-        //     // console.log("arr length if no val specifiied"+JSON.stringify(objects.push(obj)));
-
-        // }
-        }
-    return objects;
-}
 chrome.runtime.onConnect.addListener(function(port) {
 
   console.assert(port.name == "trailpath");
@@ -276,6 +225,5 @@ chrome.runtime.onConnect.addListener(function(port) {
                       }
                   });
               };
-
  }) });   
 
