@@ -119,6 +119,36 @@ chrome.runtime.onConnect.addListener(function(port) {
           });
       
   }
+      if (msg.search == "add tags"){
+        console.log("*********");
+        console.log(tags);
+        console.log("&&&&&&&");
+        console.log(msg.data.tags);
+
+          for (var i = 0; i < msg.data.tags.length; i++){
+            tags.push(msg.data.tags[i]);
+            console.log(msg.data.tags[i]);
+          }
+              console.log("Adding new tags = " + msg.data.tags);
+              console.log(tags);
+
+              jQuery.ajax({
+                  url : localhost + '/api/search?tags=' + tags,
+                  dataType : 'json',
+                  success : function(response){
+                      console.log(response);
+                      console.log("Tags added, new response = " + response);
+                      console.log(response);
+                      port.postMessage({"search": "new steps returned", "taggedsteps": response});
+                  },
+                  error : function(err){
+                      // do error checking
+                      alert("something went wrong in Seach Tags Error");
+                      console.error(err);
+                  }
+              });
+          };
+
      if (msg.search == "search tags"){
               console.log('we are in search request');
               console.log("Tags array --> "+tags);
