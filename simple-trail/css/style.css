@@ -1,6 +1,7 @@
 #trailex.container{
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
+	max-height: 100%;
 	max-width: 35%;
 	position: fixed;
 	right: 0;
@@ -44,50 +45,60 @@
 	z-index: 99;
 }
 
-#trailex #main{
+#trailex #dash{
 	margin-bottom: 10px;
+}
+
+#trailex #tag-ticker{
+	margin-bottom: 10px;
+}
+
+#trailex #add-tag-button{
+}
+
+#trailex #add-tag-div{
 }
 
 /*custom btstrp label colors*/
 
 .label-one{
-	background-color: #073D1B;
+	background-color: #484848;
 }
 
 .label-two{
-	background-color: #0E7C37;
+	background-color: #606060;
 }
 
 .label-three{
-	background-color: #14BC54;
+	background-color: #787878;
 }
 
 .label-four{
-	background-color: #19E265;
+	background-color: #909090;
 }
 
 .label-five{
-	background-color: #1BFC70;
+	background-color: #A8A8A8;
 }
 
 .label-six{
-	background-color: #1A3D27;
+	background-color: #686868;
 }
 
 .label-seven{
-	background-color: #357C4F;
+	background-color: #282828;
 }
 
 .label-eight{
-	background-color: #51BC78;
+	background-color: #383838;
 }
 
 .label-nine{
-	background-color: #61E290;
+	background-color: #000000;
 }
 
 .label-ten{
-	background-color: #6CFCA0;
+	background-color: #181818;
 }
 
 
