@@ -37,6 +37,8 @@ $(document).ready(function(){
     toggleTrail();
     plusOne();
     minusOne();
+
+    $('#trail-holder').sortable();
 });
 
 
