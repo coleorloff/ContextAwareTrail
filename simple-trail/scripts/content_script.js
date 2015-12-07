@@ -186,43 +186,43 @@ function addTrail(data){
     });
 }
 
-// $('body').on('click', '#add-step', function(e){
-//     console.log('addStep submitting once');
-//     // first, let's pull out all the values
-//     // the name form field value
+$('body').on('click', '#add-step', function(e){
+    console.log('addStep submitting once');
+    // first, let's pull out all the values
+    // the name form field value
 
-//     var pageURL = window.location.href; 
-//     var title = $(document).find("title").text();
+    var pageURL = window.location.href; 
+    var title = $(document).find("title").text();
 
-//     var data = {
-//         trailId: currentTrail,
-//         title: title,
-//         text: "step-text",
-//         tags: tagString,
-//         url: pageURL   
-//     };
+    var data = {
+        trailId: currentTrail,
+        title: title,
+        text: "step-text",
+        tags: tagString,
+        url: pageURL   
+    };
 
-//     console.log("Step to be created in the DB = " , data);
+    console.log("Step to be created in the DB = " , data);
 
-//       addStep(data);   
-//       e.preventDefault();
-//       return false;
-// });
+      addStep(data);   
+      e.preventDefault();
+      return false;
+});
 
-// function addStep(data){
-//     port.postMessage({"add": "step", "data": data});
-//     port.onMessage.addListener(function(msg) {
-//         if (msg.step == "step added"){
-//             console.log ("step added to server");
-//             port.postMessage(
-//                 {request: "thanks"}
-//                 );
-//             console.log("in content");
-//         }
-//       else if (msg.question == "Madame who?")
-//         port.postMessage({"answer": "Madame... Bovary"});
-//     });
-// }
+function addStep(data){
+    port.postMessage({"add": "step", "data": data});
+    port.onMessage.addListener(function(msg) {
+        if (msg.step == "step added"){
+            console.log ("step added to server");
+            port.postMessage(
+                {request: "thanks"}
+                );
+            console.log("in content");
+        }
+      else if (msg.question == "Madame who?")
+        port.postMessage({"answer": "Madame... Bovary"});
+    });
+}
 
 //Not sure where this is called yet 
 function renderSteps(steps){

@@ -8,8 +8,8 @@
     },
     "browser_action": {
         //"default_icon": "icons/icon128.png",
-        "default_title": "Trailz",
-        "default_popup":"popup/popup.html"
+        "default_title": "Trailz"
+        // "default_popup":"popup/popup.html"
     },
     "content_scripts": [
         {
