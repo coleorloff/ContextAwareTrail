@@ -6,7 +6,9 @@ var open = false;
 var first = true;
 var tagString;
 
-// Talking to POPUP.js // This is popping open and closing the Trailz div in your window from the extension icon
+// Talking to background.js 
+// This is opening and closing the Trailz div
+// In the window from the extension icon
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
