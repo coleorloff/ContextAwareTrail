@@ -1,6 +1,6 @@
 var currentTrail;
-// var localhost = "http://localhost:3000"
-var localhost = 'http://sudosubdocs.herokuapp.com'
+var localhost = "http://localhost:3000"
+// var localhost = 'http://sudosubdocs.herokuapp.com'
 var tags = [];
 var flatChildrenArray = []
 
@@ -13,32 +13,39 @@ function bookmarkTree(tree){
     // console.log("Array of Objects = " + JSON.stringify(tree));
     // console.log("Array of Objects = " + JSON.stringify(depthFirst(tree, 0)));
     // console.log("flatChildrenArray length = "+ flatChildrenArray.length)
-    console.log("bookmarks tree -----------> "+tree)
+    console.log("bookmarks tree -----------> ",tree)
     branch = JSON.stringify(tree)
-    jQuery.ajax({
-        url : localhost + '/api/add/bookmarks',
-        dataType : 'json',
-        type : 'POST',
-        // we send the data in a data object (with key/value pairs)
-        data : {
-            tree: branch
-        },
-        success : function(response){
-            if(response.status=="OK"){
-                console.log("data parsing ")
-            }
-            else {
-                alert("error response from");
-            }
-        },
-        error : function(err){
-          // do error checking
-            alert("something went wrong");
-            console.error(err);
-        }
-    })
+    
+
+// !!!!!!!!!!!!UNCOMMENT THIS IF YOU WANT YOUR CALL TO WORK! !!!!
+
+    // jQuery.ajax({
+    //     url : localhost + '/api/add/bookmarks',
+    //     dataType : 'json',
+    //     type : 'POST',
+    //     // we send the data in a data object (with key/value pairs)
+    //     data : {
+    //         tree: branch
+    //     },
+    //     success : function(response){
+    //         if(response.status=="OK"){
+    //             console.log("data parsing ")
+    //         }
+    //         else {
+    //             alert("error response from");
+    //         }
+    //     },
+    //     error : function(err){
+    //       // do error checking
+    //         alert("something went wrong");
+    //         console.error(err);
+    //     }
+    // })
+///////////////////////
+
 }
 
+// THis should all be working on the server side I mean it IS working
 
 // function depthFirst(tree, depth){
 //     var newDepth = depth
@@ -104,6 +111,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) { 
 
         if (msg.trail == "add trail"){
+            
             console.log("add trail" + JSON.stringify(msg.data));
             jQuery.ajax({
               url : localhost + '/api/create/trail',
@@ -114,7 +122,8 @@ chrome.runtime.onConnect.addListener(function(port) {
               success : function(response){
                   if(response.status=="OK"){
                       // success
-                      // console.log('create a trail please, but seriously you promised = '+response);
+                      addToChrome(msg.data);
+                      console.log('create a trail and bookmark please, but seriously you promised = ',response);
                       port.postMessage({"status": "Ok"});
                       // now, clear the input fields
                       // jQuery("#addTrail input").val('');
@@ -197,7 +206,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                           } else { tags = tags + keywordlist[i]; }
 
                       }
-                      console.log("tags to be searched in db --> "+tags)
+                      console.log("tags to be searched in db --> ",tags)
                       port.postMessage({"search": "alchemy tags returned", "tags": keywordlist});
                   },
                   error : function(err){
@@ -216,7 +225,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                       url : localhost + '/api/search?tags=' + tags,
                       dataType : 'json',
                       success : function(response){
-                          console.log("DB response for tags "+response);
+                          console.log("DB response for tags ",response);
                           port.postMessage({"search": "relevant steps returned", taggedsteps:response});
                       },
                       error : function(err){
@@ -228,3 +237,13 @@ chrome.runtime.onConnect.addListener(function(port) {
               };
  }) });   
 
+function addToChrome(data){
+    var newMark = {
+        parentId: "609",
+        title: data.title,
+        url: data.url
+    };
+    console.log("addToChrome Boooy ", newMark);
+
+    chrome.bookmarks.create(newMark)
+ }

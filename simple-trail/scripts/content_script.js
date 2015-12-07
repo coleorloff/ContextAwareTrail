@@ -7,6 +7,7 @@ var first = true;
 var tagString;
 
 // Talking to POPUP.js // This is popping open and closing the Trailz div in your window from the extension icon
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if(request.message == "clicked_button_in_popup" && first && !open) {
@@ -73,12 +74,14 @@ function loadEx(){
     jQuery('#trailex').prepend(htmlToAdd);
 }
 
+
+
 function displayTrail(){
     port.postMessage({"display": "display trail"});
     port.onMessage.addListener(function(msg) {
         if (msg.status == "Ok"){
             console.log ("status returned success on returned to server");
-            console.log ("now render msg.response --> "+ JSON.stringify(msg.res));
+            console.log ("now render msg.response --> ", msg.res);
             trackTrailId(msg.res);
             // renderTrail(msg.res);
         }
@@ -157,12 +160,16 @@ $('body').on('click', '#add-trail', function(e){
         tags: tagString
     };
 
-    console.log("Object to be created in the DB = " + JSON.stringify(data));
+    console.log("Object to be created in the DB = ", data);
       // prevents the form from submitting normally
       e.preventDefault();
       addTrail(data);
+      // addToChrome(data);
+      
       return false;
 });
+
+
 
 function addTrail(data){
     port.postMessage({"trail": "add trail", "data": data});
@@ -179,43 +186,43 @@ function addTrail(data){
     });
 }
 
-$('body').on('click', '#add-step', function(e){
-    console.log('addStep submitting once');
-    // first, let's pull out all the values
-    // the name form field value
+// $('body').on('click', '#add-step', function(e){
+//     console.log('addStep submitting once');
+//     // first, let's pull out all the values
+//     // the name form field value
 
-    var pageURL = window.location.href; 
-    var title = $(document).find("title").text();
+//     var pageURL = window.location.href; 
+//     var title = $(document).find("title").text();
 
-    var data = {
-        trailId: currentTrail,
-        title: title,
-        text: "step-text",
-        tags: tagString,
-        url: pageURL   
-    };
+//     var data = {
+//         trailId: currentTrail,
+//         title: title,
+//         text: "step-text",
+//         tags: tagString,
+//         url: pageURL   
+//     };
 
-    console.log("Step to be created in the DB = " + JSON.stringify(data));
+//     console.log("Step to be created in the DB = " , data);
 
-      addStep(data);   
-      e.preventDefault();
-      return false;
-});
+//       addStep(data);   
+//       e.preventDefault();
+//       return false;
+// });
 
-function addStep(data){
-    port.postMessage({"add": "step", "data": data});
-    port.onMessage.addListener(function(msg) {
-        if (msg.step == "step added"){
-            console.log ("step added to server");
-            port.postMessage(
-                {request: "thanks"}
-                );
-            console.log("in content");
-        }
-      else if (msg.question == "Madame who?")
-        port.postMessage({"answer": "Madame... Bovary"});
-    });
-}
+// function addStep(data){
+//     port.postMessage({"add": "step", "data": data});
+//     port.onMessage.addListener(function(msg) {
+//         if (msg.step == "step added"){
+//             console.log ("step added to server");
+//             port.postMessage(
+//                 {request: "thanks"}
+//                 );
+//             console.log("in content");
+//         }
+//       else if (msg.question == "Madame who?")
+//         port.postMessage({"answer": "Madame... Bovary"});
+//     });
+// }
 
 //Not sure where this is called yet 
 function renderSteps(steps){
@@ -255,7 +262,7 @@ function getTags(url){
         url:  url
     };
 
-    console.log("get tags data: " + data);
+    console.log("get tags data: ", data);
     port.postMessage({"search": "find tags", "data": data});
     port.onMessage.addListener(function(msg) {
         if (msg.search == "alchemy tags returned"){
@@ -296,8 +303,6 @@ function saveText(e){
 }
 
 function colorTags(tags){
-    
-
         $('#tags').append('<span class="label label-success">'+tags+'</span>')
 
     console.log(tags);
