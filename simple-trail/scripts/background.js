@@ -116,21 +116,16 @@ chrome.runtime.onConnect.addListener(function(port) {
                   console.log("something went wrong with alchemy");
                   console.error(err);
               } 
-          });
-      
+          });  
   }
       if (msg.search == "add tags"){
-        console.log("*********");
-        console.log(tags);
-        console.log("&&&&&&&");
-        console.log(msg.data.tags);
 
           for (var i = 0; i < msg.data.tags.length; i++){
             tags.push(msg.data.tags[i]);
             console.log(msg.data.tags[i]);
           }
               console.log("Adding new tags = " + msg.data.tags);
-              console.log(tags);
+              console.log(msg.data.tags);
 
               jQuery.ajax({
                   url : localhost + '/api/search?tags=' + tags,
@@ -140,6 +135,34 @@ chrome.runtime.onConnect.addListener(function(port) {
                       console.log("Tags added, new response = " + response);
                       console.log(response);
                       port.postMessage({"search": "new steps returned", "taggedsteps": response});
+                  },
+                  error : function(err){
+                      // do error checking
+                      alert("something went wrong in Seach Tags Error");
+                      console.error(err);
+                  }
+              });
+          };
+
+          /////working on removing tags
+
+       if (msg.search == "remove tags"){
+          console.log(msg.data.tags);
+
+          for (var i = 0; i < msg.data.tags.length; i++){
+            console.log(msg.data.tags.indexOf(msg.data.tags[i]));
+            tags.splice(tags.indexOf(msg.data.tags[i]), 1);
+          }
+              console.log("Removing tags = " + msg.data.tags)
+
+              jQuery.ajax({
+                  url : localhost + '/api/search?tags=' + tags,
+                  dataType : 'json',
+                  success : function(response){
+                      console.log(response);
+                      console.log("Tags added, new response = " + response);
+                      console.log(response);
+                      port.postMessage({"search": "revised steps returned", "taggedsteps": response});
                   },
                   error : function(err){
                       // do error checking

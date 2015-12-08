@@ -4,8 +4,9 @@ var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
 var first = true;
-var tagString;
+var tagString = [];
 var classTagStream = $('#tag-stream');
+var currentTags = [];
 
 // Talking to POPUP.js // This is popping open and closing the Trailz div in your window from the extension icon
 chrome.runtime.onMessage.addListener(
@@ -58,9 +59,7 @@ function loadEx(){
 
         var htmlToAdd = 
             '<div class="trailMenu" id="dash">'+
-                    //'<h1> Az </h1>'+
                         '<div class="btn-group btn-group-xs">'+
-                            '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
                             //creates new "trail" in db, i.e. saves current page with relevent information
                             //should this become a secondary action??
                             '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Current Page</button>'+
@@ -72,8 +71,9 @@ function loadEx(){
                 //pls insert tags returned from Alchemy here
                     '<div class="panel panel-default" id="tag-stream">'+'</div>'+
                     '<div class="input-group input-group-sm id="add-tag-div">'+
-                            '<input type="text" class="form-control" id="add-tag-input" placeholder="Enter a tag">'+
-                            '<span class="input-group-addon" id="add-tag-button">'+ 'Add' + '</span>'+
+                            '<input type="text" class="form-control" id="add-tag-input" placeholder="tags,go,here">'+
+                            '<span class="input-group-addon" id="add-tag-button">'+ '<span class="glyphicon glyphicon glyphicon-plus"></span>' + '</span>'+
+                            '<span class="input-group-addon" id="remove-tag-button">'+ '<span class="glyphicon glyphicon glyphicon-minus"></span>' + '</span>'+
                     '</div>'+
                 '</div>'+
                 '<div style="margin-bottom:10px"></div>';
@@ -154,21 +154,24 @@ function toggleTrail(){
 function plusOne(){
     $('body').on('click', '#add-tag-button', function(e){
         var newTag = document.getElementById('add-tag-input').value.split(',');
-        //console.log(newTag);
-        document.getElementById('add-tag-input').value = "Enter a tag";
+        document.getElementById('add-tag-input').value = "tags,go,here";
         for (var i = 0; i < newTag.length; i++){
-            $('#tag-stream').append('<span class="label label-ten">' + newTag[i] + '</span>');
+          $('#tag-stream').append('<span class="label label-ten" id="' + newTag[i] + '">' + newTag[i] + '</span>');
         }
         updateTags(newTag);
     });
-};
+}
 
 function minusOne(){
-    $('body').on('click', '.label', function(e){
-        console.log(e.target.innerHTML);
-
+    $('body').on('click', '#remove-tag-button', function(e){
+        var targetTag = document.getElementById('add-tag-input').value.split(',');
+        for (var i = 0; i < targetTag.length; i++){
+            document.getElementById(targetTag[i]).remove();
+            console.log("shit was removed");
+        }
+        removeTags(targetTag);
     });
-};
+}
 
 $('body').on('click', '#add-trail', function(e){
     console.log('submitting once');
@@ -295,7 +298,8 @@ function getTags(url){
             console.log ("tags returned to content script from alchemy -->" + msg.tags)
             tagsToString(msg.tags);
             //this function will display the tags that have been returned from Alchemy
-            displayTags(msg.tags)
+            currentTags = msg.tags;
+            displayTags(currentTags);
 
             port.postMessage({"search": "search tags"});
             console.log("in the search for DB tags");
@@ -333,6 +337,26 @@ function updateTags(newTags){
     });
 }
 
+function removeTags(targetTags){
+    console.log("removing:")
+    console.log(targetTags);
+
+    var data = {  
+        tags : targetTags
+    };
+
+    port.postMessage({"search": "remove tags", "data": data});
+    port.onMessage.addListener(function(msg) {
+        if (msg.search == "revised steps returned"){
+            console.log("awesome we got REVISED tags!" + msg.taggedsteps);
+            console.log(msg.taggedsteps);
+            //this is where the magic happens
+            //trails with matching tags get displayed
+            renderTrail(msg.taggedsteps);
+        }
+    });
+}
+
 function tagsToString(array){
    
     for (var i = 0 ; i< array.length; i++){
@@ -353,32 +377,25 @@ function saveText(e){
     e.preventDefault();
 }
 
+//returns styled tags for each retrieved page
 function colorTags(tags){
-    //var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
-    var temp = [];
+    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
     var wrappedTags = [];
     //for each tag
     //make tag a label
     //add a random label type to it
-
     for (var i = 0; i < tags.length; i ++){
-       wrappedTags.push('<div class ="label ' + randomLabelClass() + '">' + tags[i]+'</div>');
+       wrappedTags.push('<div class ="label ' + colors[i] + '">' + tags[i]+'</div>');
     }
-
     return wrappedTags.join(" ");
 };
 
-function randomLabelClass(){
-    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
-    var selected = colors[~~(Math.random()*colors.length)];
-    return selected;
-}
-
+//returns styled tags for each Alchemy-generated tags in the "tag stream" up top
 function displayTags(tags){
     var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
     var wrappedTags = [];
     for (var i = 0; i < tags.length; i ++){
-       wrappedTags.push('<span class ="label ' + randomLabelClass() + ' id="'+ tags[i] + '">' + tags[i]+'</span>');
+       wrappedTags.push('<span class ="label ' + colors[i] + ' id="'+ tags[i] + '">' + tags[i]+'</span>');
     }
     $('#tag-stream').append(wrappedTags.slice(0, 5));
 };
