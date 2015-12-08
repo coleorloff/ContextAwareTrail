@@ -387,7 +387,6 @@ function saveText(e){
 
 //returns styled tags for each retrieved page
 function colorTags(tags){
-// <<<<<<< HEAD
         $('#tags').append('<span class="label label-success">'+tags+'</span>')
     var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
     var wrappedTags = [];
@@ -399,7 +398,6 @@ function colorTags(tags){
     }
     return wrappedTags.join(" ");
 };
-// >>>>>>> 5dad4159e0f2d22a954a1d3cd6261559a1a6bca2
 
 //returns styled tags for each Alchemy-generated tags in the "tag stream" up top
 function displayTags(tags){
