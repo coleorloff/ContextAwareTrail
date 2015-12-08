@@ -1,6 +1,6 @@
 var currentTrail;
-var localhost = "http://localhost:3000"
-// var localhost = 'http://sudosubdocs.herokuapp.com'
+// var localhost = "http://localhost:3000"
+var localhost = 'http://sudosubdocs.herokuapp.com'
 var tags = [];
 var flatChildrenArray = []
 var bookmarksTreeHolder;
