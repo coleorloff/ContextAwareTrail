@@ -5,7 +5,7 @@ var tags = [];
 var flatChildrenArray = []
 var bookmarksTreeHolder;
 var folderID = "609";
-
+var state = true;
 chrome.bookmarks.getTree(function(tree){
     bookmarkTree(tree);
 });
@@ -39,7 +39,7 @@ function bookmarkTree(tree){
     folderID = findTrailzFolder(tree);
     console.log("folderID ",folderID)
 // !!!!!!!!!!!!UNCOMMENT THIS IF YOU WANT YOUR CALL TO WORK! !!!!
-
+ if (state){
     jQuery.ajax({
         url : localhost + '/api/add/bookmarks',
         dataType : 'json',
@@ -62,6 +62,7 @@ function bookmarkTree(tree){
             console.error(err);
         }
     })
+}   
 ///////////////////////
 
 }
@@ -211,21 +212,33 @@ function addToChrome(data){
     chrome.bookmarks.create(newMark)
  }
 function findTrailzFolder(tree){
-    var sub = tree[0].children[0]
+    console.log("someone wants that Trailz folder")
+    var sub = tree[0].children[0].children;
+    // console.log("sub.id = ", tree[0].children[0].id)
     var count = 0
+    
     for (var  i = 0; i < sub.length; i++ ){
-        if (sub[i].title == Trailz){
+        console.log("sub.length = ", sub.length)
+        if (sub[i].title == "Trailz"){
+            console.log("Found --> ", sub[i].title)
             return sub[i].id
         } else {
             count++
+            // tree[0].children[0].id
             if (count == sub.length){
                 var data = {
-                    parentId: tree[0].children.id,
+                    parentId: "1",
                     title: "Trailz",
                     url: ""
                 }
                 // uncommented this because its not ready yet
-                // addToChrome(data)
+                addToChrome(data)
+                chrome.bookmarks.getTree(function(marks){
+                    console.log("marks",marks)
+                    if (state) {findTrailzFolder(marks); state = false;}
+                    
+                });
+                
             }
 
         }
