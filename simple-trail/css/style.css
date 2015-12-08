@@ -1,18 +1,71 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald:400,300);
+
 #trailex.container{
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
-	max-height: 100%;
+	height: 100%;
 	max-width: 35%;
-	position: absolute;
+	position: fixed;
 	right: 0;
-	background-color: lightyellow;
+	background-color: whitesmoke;
 	overflow: auto;
 	z-index: 99999999999999;
 }
 
-#trailex h1{
+#trailex .trailMenu{
 	font-family: font-family: 'Oswald', sans-serif;
+	font-weight: 300;
+}
+
+#trailex #tag-stream{
+}
+
+#trailex .panel {
+	margin-bottom: 5%;
+	border-color:lightgrey;
+}
+
+#trailex .panel .list-group-item{
+	border: 0;
+	background-color: #lightgrey;
+	background-opacity: .2;
+}
+
+#trailex .panel .panel-heading{
+	border: 0;
+	background-color: #FEFFFF;
+}
+
+#trailex h1{
+	font-family:'Oswald', sans-serif;
 	font-weight: 400;
+	font-color: lightgrey;
+}
+
+#trailex .panel-heading {
+	font-family: 'Oswald', sans-serif;
+	font-weight: 400;
+}
+
+#trailex div .panel-heading .title{
+	display: inline-block;
+	margin-right: 2%;
+}
+
+#trailex .tag-bus{
+	display: inline-block;
+}
+
+#trailex .tag-bus .label{
+	display: inline-block;
+	vertical-align: text-top;
+}
+
+#trailex .label{
+	font-family: font-family: 'Oswald', sans-serif;
+	font-weight: 300;
+	display: inline-block;
+	margin: 2px;
 }
 
 #trailex.container.toggled{
@@ -24,19 +77,6 @@
 	font-weight: 300;
 }
 
-#trailex .btn-group{
-}
-
-#trailex .label{
-	display: inline-block;
-	margin: 2px;
-}
-
-#trailex .panel-heading {
-	font-family: 'Oswald', sans-serif;
-	font-weight: 400;
-}
-
 #trailex .holder.hidden{
 	visibility: hidden;
 }
@@ -45,7 +85,61 @@
 	z-index: 99;
 }
 
-#trailex #main{
-	margin-bottom: 10px;
+#trailex #dash{
+	padding-bottom: 2%;
+
 }
+
+#trailex .tag-ticker{
+}
+
+#trailex #add-tag-button{
+}
+
+#trailex #add-tag-div{
+}
+
+/*custom btstrp label colors*/
+
+.label-one{
+	background-color: #404040;
+}
+
+.label-two{
+	background-color: #484848;
+}
+
+.label-three{
+	background-color: #505050;
+}
+
+.label-four{
+	background-color: #585858;
+}
+
+.label-five{
+	background-color: #606060;
+}
+
+.label-six{
+	background-color: #686868;
+}
+
+.label-seven{
+	background-color: #707070;
+}
+
+.label-eight{
+	background-color: #787878;
+}
+
+.label-nine{
+	background-color: #808080;
+}
+
+.label-ten{
+	background-color: #888888;
+}
+
+
 

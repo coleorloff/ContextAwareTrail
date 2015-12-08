@@ -18,7 +18,8 @@
             "js": [
                 "scripts/jquery.js",
                 "scripts/content_script.js",
-                "scripts/boostrap-3_3_5.js"
+                "scripts/boostrap-3_3_5.js",
+                "scripts/jquery-ui.min.js"
             ],
             "css": [ 
                 "css/boostrap-3_3_5.css",

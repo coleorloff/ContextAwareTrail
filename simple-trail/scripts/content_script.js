@@ -4,7 +4,9 @@ var port = chrome.runtime.connect({name: "trailpath"});
 var currentTrail;
 var open = false;
 var first = true;
-var tagString;
+var tagString = [];
+var classTagStream = $('#tag-stream');
+var currentTags = [];
 
 // Talking to background.js 
 // This is opening and closing the Trailz div
@@ -17,7 +19,6 @@ chrome.runtime.onMessage.addListener(
             displayTrail();
             first = !first;
             open = !open;
-            console.log(open);
         } else if (request.message == "clicked_button_in_popup"){
             toggleContainer();
             open = !open;
@@ -38,40 +39,47 @@ chrome.runtime.onMessage.addListener(
 ///MAIN DOCUMENT FUNCTION////
 $(document).ready(function(){
     toggleTrail();
-
     plusOne();
+    minusOne();
+
+    $('#trail-holder').sortable();
+
 });
+
 
 function loadEx(){
     var host = window.location.hostname;
     var pageBody = $(document.body);
     var pageURL = window.location.href;   
+   
     
     console.log("pageURL =" + pageURL) 
     console.log('hostname -->' + host)
     getTags(pageURL);
 
-    $('<div id="trailex" class="container">'+'</div>').prependTo(pageBody);
+    $('<div class="container" id="trailex" >'+'</div>').prependTo(pageBody);
     $('<div class="holder" id="trail-holder">'+'</div>').appendTo('#trailex');
+
         var htmlToAdd = 
-            '<div class="menu" id="main">'+
-                    '<h1> Az </h1>'+
+            '<div class="trailMenu" id="dash">'+
                         '<div class="btn-group btn-group-xs">'+
-                            '<button type="button" class="btn btn-default" role="group" id="display-trail">Display Trail</button>'+
-                            '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Trail</button>'+
-                            '<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
+                            //creates new "trail" in db, i.e. saves current page with relevent information
+                            //should this become a secondary action??
+                            '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Current Page</button>'+
+                            //should be permenently removed. "steps" no longer exist, as there will not be child-nodes/pages in this view.
+                            //'<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
                         '</div>'+
             '</div>'+
-                '<div id="tagTicker">'+
-                    '<div class="panel panel-default" id="tag-stream">'+
-                        '<span class="label label-success">Tags will</span>'+
-                        '<span class="label label-info">go</span>'+
-                        '<span class="label label-primary">here</span>'+
-                        '<span class="label label-warning">here</span>'+
-                        '<span class="label label-warning">here</span>'+
-                        '<span class="label label-info" id="add-tag">+</span>'+
+                '<div class="tagTicker" id="tagTicker">'+
+                //pls insert tags returned from Alchemy here
+                    '<div class="panel panel-default" id="tag-stream">'+'</div>'+
+                    '<div class="input-group input-group-sm id="add-tag-div">'+
+                            '<input type="text" class="form-control" id="add-tag-input" placeholder="tags,go,here">'+
+                            '<span class="input-group-addon" id="add-tag-button">'+ '<span class="glyphicon glyphicon glyphicon-plus"></span>' + '</span>'+
+                            '<span class="input-group-addon" id="remove-tag-button">'+ '<span class="glyphicon glyphicon glyphicon-minus"></span>' + '</span>'+
                     '</div>'+
-            '</div>';
+                '</div>'+
+                '<div style="margin-bottom:10px"></div>';
 
     jQuery('#trailex').prepend(htmlToAdd);
 }
@@ -85,7 +93,11 @@ function displayTrail(){
             console.log ("status returned success on returned to server");
             console.log ("now render msg.response --> ", msg.res);
             trackTrailId(msg.res);
-            // renderTrail(msg.res);
+            //this render all the "trails"
+            //they get rendered a second time in getTags()
+            //that time only the trailz with matching tags are rendered
+            //so we might want to create a seperate function that takes any set of trailz to display.
+            //renderTrail(msg.res);
         }
       else if (msg.question == "Madame who?")
         port.postMessage({"answer": "Madame... Bovary"});
@@ -94,11 +106,12 @@ function displayTrail(){
 
 function renderTrail(trails){
     // trackTrailId(trails);
-    var htmlToAdd = "";
-           
+    var htmlToAdd = "";    
     jQuery('.trailex').append(htmlToAdd);
 
     // first, make sure the #animal-holder is empty
+    //...but maybe not. this was causing the trail-holder div to appear on 
+    //open and then immediately and irreversibly disappear. 
     jQuery('#trail-holder').empty();
 
     // loop through all the steps and add them in the animal-holder div
@@ -108,14 +121,18 @@ function renderTrail(trails){
             stepsInTrail += 
             '<div class="step-holder">'+
                 '<div class="panel panel-default">'+
-                    '<div class="panel-heading">'+trails[i].title+'</div>'+
+                ///replaced "trail" title with "step"-title
+                //although technically, we are still displaying a "trail" here.
+                //it just has one "step" in it and that is what's being displayed.
+                    '<div class="panel-heading"><div class="title"><a href="'+trails[i].steps[j].url+'">'+trails[i].steps[j].title+'</a></div><div class="tag-bus">'+ colorTags(trails[i].steps[j].tags) +'</div></div>'+
                         '<div class="panel-body>'+
                             '<ul class="list-group">'+
-                                '<li class="list-group-item" id="step-title"> Title: '+trails[i].steps[j].title+'</span></li>'+
-                                '<li class="list-group-item" id="text"> Saved Text: '+trails[i].steps[j].text+'</span></li>'+
-                                '<li class="list-group-item" id="url URL: ">'+trails[i].steps[j].url+'</span></li>'+
-            
-                                '<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
+                                //'<li class="list-group-item" id="tags">'+colorTags(trails[i].steps[j].tags)+'</span></li>'+
+                                //needs some function that takes an array of tags
+                                //and puts each tag into a random label type
+                                '<li class="list-group-item" id="text">'+trails[i].steps[j].text+'</span></li>'+
+                                //'<li class="list-group-item" id="hide url"> URL:'+trails[i].steps[j].url+'</span></li>'+
+                                //'<li class="hide list-group-item" id="hide id"> ID: '+trails[i].steps[j]._id+'</li>'+
                             '</div>'
                         '<div class="btn-group">'+
                             '<button type="button" class="btn btn-group" id="'+trails[i]._id+'" onclick="trackTrailId(event)">Add Step</button>'+
@@ -124,25 +141,40 @@ function renderTrail(trails){
                         '</div>'+
                 '</div>'+
             '</div>';
+            
         }
         jQuery('#trail-holder').append(stepsInTrail);
-    }
-    
+    } 
 }
 
-function toggleContainer(){
-   $('#trailex').toggleClass('toggled');
-}
-
+//on Browser Action button click --> opens the extension in the window
+function toggleContainer(){$('#trailex').toggleClass('toggled');}
+//on "display trail" button click --> toggles the trail open/closed
 function toggleTrail(){
     $('body').on('click', '#display-trail', function(e){
         $('.holder').toggleClass('hidden')
     });
 };
-
+//adds a new label to the list of tags
 function plusOne(){
-     $('body').on('click', '#add-tag', function(e){
-        $('#tag-stream').append('<span class="label label-danger">NEW!</span>')
+    $('body').on('click', '#add-tag-button', function(e){
+        var newTag = document.getElementById('add-tag-input').value.split(',');
+        document.getElementById('add-tag-input').value = "tags,go,here";
+        for (var i = 0; i < newTag.length; i++){
+          $('#tag-stream').append('<span class="label label-ten" id="' + newTag[i] + '">' + newTag[i] + '</span>');
+        }
+        updateTags(newTag);
+    });
+}
+
+function minusOne(){
+    $('body').on('click', '#remove-tag-button', function(e){
+        var targetTag = document.getElementById('add-tag-input').value.split(',');
+        for (var i = 0; i < targetTag.length; i++){
+            document.getElementById(targetTag[i]).remove();
+            console.log("shit was removed");
+        }
+        removeTags(targetTag);
     });
 }
 
@@ -211,6 +243,10 @@ $('body').on('click', '#add-step', function(e){
       return false;
 });
 
+//we're not using this right now. 
+//"Add Page" creates a new trail (one item long) in the db
+//server-side search function is only searching tags in trails right now
+//that's why this function is redundant
 function addStep(data){
     port.postMessage({"add": "step", "data": data});
     port.onMessage.addListener(function(msg) {
@@ -255,7 +291,8 @@ function renderSteps(steps){
 // This is where the trails are injected into the page
 function getTags(url){
     console.log("get tags fired");
-    // var pageURL = window.location.href;  
+    //var pageURL = window.location.href;  
+
     var data = {
         trailId: currentTrail,
         title: "step-title",
@@ -263,23 +300,67 @@ function getTags(url){
         tags: "step-tags",
         url:  url
     };
-
-    console.log("get tags data: ", data);
     port.postMessage({"search": "find tags", "data": data});
     port.onMessage.addListener(function(msg) {
         if (msg.search == "alchemy tags returned"){
-            // console.log (msg.search);
             console.log ("tags returned to content script from alchemy -->" + msg.tags)
             tagsToString(msg.tags);
+            //this function will display the tags that have been returned from Alchemy
+            currentTags = msg.tags;
+            displayTags(currentTags);
+
             port.postMessage({"search": "search tags"});
             console.log("in the search for DB tags");
         }
         if (msg.search == "relevant steps returned"){
-            console.log("awesome we got tags!"+msg.taggedsteps)
-            
-            renderTrail(msg.taggedsteps);
-            
+            console.log("awesome we got tags!" + msg.taggedsteps);
+            console.log(msg.taggedsteps);
 
+            //this is where the magic happens
+            //trails with matching tags get displayed
+            renderTrail(msg.taggedsteps);
+        }
+    });
+}
+
+//after you add new tags, this passes those new tags to the original
+//tag array and updates the shit you see
+function updateTags(newTags){
+    console.log("updating tags with:")
+    console.log(newTags);
+
+    var data = {  
+        tags : newTags
+    };
+
+    port.postMessage({"search": "add tags", "data": data});
+    port.onMessage.addListener(function(msg) {
+        if (msg.search == "new steps returned"){
+            console.log("awesome we got NEW tags!" + msg.taggedsteps);
+            console.log(msg.taggedsteps);
+            //this is where the magic happens
+            //trails with matching tags get displayed
+            renderTrail(msg.taggedsteps);
+        }
+    });
+}
+
+function removeTags(targetTags){
+    console.log("removing:")
+    console.log(targetTags);
+
+    var data = {  
+        tags : targetTags
+    };
+
+    port.postMessage({"search": "remove tags", "data": data});
+    port.onMessage.addListener(function(msg) {
+        if (msg.search == "revised steps returned"){
+            console.log("awesome we got REVISED tags!" + msg.taggedsteps);
+            console.log(msg.taggedsteps);
+            //this is where the magic happens
+            //trails with matching tags get displayed
+            renderTrail(msg.taggedsteps);
         }
     });
 }
@@ -304,11 +385,34 @@ function saveText(e){
     e.preventDefault();
 }
 
+//returns styled tags for each retrieved page
 function colorTags(tags){
+// <<<<<<< HEAD
         $('#tags').append('<span class="label label-success">'+tags+'</span>')
-
-    console.log(tags);
+    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    var wrappedTags = [];
+    //for each tag
+    //make tag a label
+    //add a random label type to it
+    for (var i = 0; i < tags.length; i ++){
+       wrappedTags.push('<div class ="label ' + colors[i] + '">' + tags[i]+'</div>');
+    }
+    return wrappedTags.join(" ");
 };
+// >>>>>>> 5dad4159e0f2d22a954a1d3cd6261559a1a6bca2
+
+//returns styled tags for each Alchemy-generated tags in the "tag stream" up top
+function displayTags(tags){
+    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    var wrappedTags = [];
+    for (var i = 0; i < tags.length; i ++){
+       wrappedTags.push('<span class ="label ' + colors[i] + ' id="'+ tags[i] + '">' + tags[i]+'</span>');
+    }
+    $('#tag-stream').append(wrappedTags.slice(0, 5));
+};
+
+
+
 
 
 
