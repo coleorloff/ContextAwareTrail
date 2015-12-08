@@ -1,3 +1,14 @@
+.panel .list-group-item{
+	border: 0;
+	background-color: #E5FFED;
+	background-opacity: .2;
+}
+
+.panel .panel-heading{
+	border: 0;
+	background-color: #FEFFFF;
+}
+
 #trailex.container{
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
@@ -5,7 +16,7 @@
 	max-width: 35%;
 	position: fixed;
 	right: 0;
-	background-color: lightyellow;
+	background-color: whitesmoke;
 	overflow: auto;
 	z-index: 99999999999999;
 }
@@ -13,6 +24,34 @@
 #trailex h1{
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 400;
+	font-color: whitesmoke;
+}
+
+#trailex .panel-heading {
+	font-family: 'Oswald', sans-serif;
+	font-weight: 400;
+}
+
+#trailex div .panel-heading .title{
+	display: inline-block;
+	margin-right: 2%;
+}
+
+#trailex .tag-bus{
+	display: inline-block;
+}
+
+#trailex .tag-bus .label{
+	display: inline-block;
+	vertical-align: text-top;
+}
+
+#trailex .label{
+	font-family: font-family: 'Oswald', sans-serif;
+	font-weight: 300;
+	display: inline-block;
+	margin: 2px;
+
 }
 
 #trailex.container.toggled{
@@ -24,18 +63,7 @@
 	font-weight: 300;
 }
 
-#trailex .btn-group{
-}
 
-#trailex .label{
-	display: inline-block;
-	margin: 2px;
-}
-
-#trailex .panel-heading {
-	font-family: 'Oswald', sans-serif;
-	font-weight: 400;
-}
 
 #trailex .holder.hidden{
 	visibility: hidden;

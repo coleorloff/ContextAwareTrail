@@ -39,6 +39,7 @@ $(document).ready(function(){
     minusOne();
 
     $('#trail-holder').sortable();
+
 });
 
 
@@ -118,10 +119,10 @@ function renderTrail(trails){
                 ///replaced "trail" title with "step"-title
                 //although technically, we are still displaying a "trail" here.
                 //it just has one "step" in it and that is what's being displayed.
-                    '<div class="panel-heading"><a href="'+trails[i].steps[j].url+'">'+trails[i].steps[j].title+'</a></div>'+
+                    '<div class="panel-heading"><div class="title"><a href="'+trails[i].steps[j].url+'">'+trails[i].steps[j].title+'</a></div><div class="tag-bus">'+ colorTags(trails[i].steps[j].tags) +'</div></div>'+
                         '<div class="panel-body>'+
                             '<ul class="list-group">'+
-                                '<li class="list-group-item" id="tags">'+colorTags(trails[i].steps[j].tags)+'</span></li>'+
+                                //'<li class="list-group-item" id="tags">'+colorTags(trails[i].steps[j].tags)+'</span></li>'+
                                 //needs some function that takes an array of tags
                                 //and puts each tag into a random label type
                                 '<li class="list-group-item" id="text">'+trails[i].steps[j].text+'</span></li>'+
@@ -353,7 +354,7 @@ function saveText(e){
 }
 
 function colorTags(tags){
-    var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
+    //var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
     var temp = [];
     var wrappedTags = [];
     //for each tag
@@ -361,10 +362,10 @@ function colorTags(tags){
     //add a random label type to it
 
     for (var i = 0; i < tags.length; i ++){
-       wrappedTags.push('<span class ="label ' + randomLabelClass() + '">' + tags[i]+'</span>');
+       wrappedTags.push('<div class ="label ' + randomLabelClass() + '">' + tags[i]+'</div>');
     }
 
-    return wrappedTags;
+    return wrappedTags.join(" ");
 };
 
 function randomLabelClass(){
