@@ -248,6 +248,7 @@ chrome.runtime.onConnect.addListener(function(port) {
   }
 
   // ask cole why he got rig of the keywordlist to tags 
+  //->dunno...maybe this is why the number of tags we're returning is limited?????
       //     if (msg.search == "find tags"){
       //         // console.log('we are in search request');
       //         // console.log("pageURL --> "+msg.data.url);
@@ -325,7 +326,8 @@ chrome.runtime.onConnect.addListener(function(port) {
                       }
                   });
               };
- }) });   
+ }) 
+});   
 // this function adds a new bookmark to chrome when a new trail
 // is added, however it requires a specific Trail id
 function addToChrome(data){

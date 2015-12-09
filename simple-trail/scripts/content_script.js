@@ -41,11 +41,11 @@ $(document).ready(function(){
     toggleTrail();
     plusOne();
     minusOne();
+    clickATag();
 
     $('#trail-holder').sortable();
 
 });
-
 
 function loadEx(){
     var host = window.location.hostname;
@@ -63,8 +63,8 @@ function loadEx(){
         var htmlToAdd = 
             '<div class="trailMenu" id="dash">'+
                         '<div class="btn-group btn-group-xs">'+
-                            //creates new "trail" in db, i.e. saves current page with relevent information
-                            //should this become a secondary action??
+                        //     //creates new "trail" in db, i.e. saves current page with relevent information
+                        //     //should this become a secondary action??
                             '<button type="button" class="btn btn-default" role="group" id="add-trail">Add Current Page</button>'+
                             //should be permenently removed. "steps" no longer exist, as there will not be child-nodes/pages in this view.
                             //'<button type="button" class="btn btn-default" role="group" id="add-step">Add Step</button>'+
@@ -83,8 +83,6 @@ function loadEx(){
 
     jQuery('#trailex').prepend(htmlToAdd);
 }
-
-
 
 function displayTrail(){
     port.postMessage({"display": "display trail"});
@@ -173,11 +171,12 @@ function plusOne(){
 
 function minusOne(){
     $('body').on('click', '#remove-tag-button', function(e){
+        console.log(e);
         var targetTag = document.getElementById('add-tag-input').value.split(',');
         for (var i = 0; i < targetTag.length; i++){
             document.getElementById(targetTag[i]).remove();
-            console.log("shit was removed");
         }
+         console.log("shit was removed");
         removeTags(targetTag);
     });
 }
@@ -206,8 +205,6 @@ $('body').on('click', '#add-trail', function(e){
       
       return false;
 });
-
-
 
 function addTrail(data){
     port.postMessage({"trail": "add trail", "data": data});
@@ -391,15 +388,17 @@ function saveText(e){
 
 //returns styled tags for each retrieved page
 function colorTags(tags){
-        $('#tags').append('<span class="label label-success">'+tags+'</span>')
+    $('#tags').append('<span class="label label-success">'+tags+'</span>')
     var colors = ['label-one', 'label-two', 'label-three', 'label-four', 'label-five', 'label-six', 'label-seven', 'label-eight', 'label-nine', 'label-ten'];
     var wrappedTags = [];
     //for each tag
     //make tag a label
     //add a random label type to it
     for (var i = 0; i < tags.length; i ++){
-       wrappedTags.push('<div class ="label ' + colors[i] + '">' + tags[i]+'</div>');
+        wrappedTags.push('<div class ="label ' + colors[i] + '">' + tags[i]+'</div>');
     }
+   wrappedTags = wrappedTags.slice(0, 9);
+    //console.log("colorTags()");
     return wrappedTags.join(" ");
 };
 
@@ -410,8 +409,19 @@ function displayTags(tags){
     for (var i = 0; i < tags.length; i ++){
        wrappedTags.push('<span class ="label ' + colors[i] + ' id="'+ tags[i] + '">' + tags[i]+'</span>');
     }
+    //console.log("displayTags()");
     $('#tag-stream').append(wrappedTags.slice(0, 5));
+
 };
+
+function clickATag(){
+    $('body').on('click', '.label', function(event){
+        var myTag = event.target;
+         document.getElementById('add-tag-input').value = myTag.innerHTML;
+    })
+
+
+}
 
 
 

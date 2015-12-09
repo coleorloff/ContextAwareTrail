@@ -53,7 +53,8 @@
 }
 
 #trailex .tag-bus{
-	display: inline-block;
+	display: inline;
+
 }
 
 #trailex .tag-bus .label{
@@ -75,6 +76,10 @@
 #trailex .btn {
 	font-family: font-family: 'Oswald', sans-serif;
 	font-weight: 300;
+}
+
+#trailex .btn .btn-default:focus{
+	background-color: mediumspringgreen;
 }
 
 #trailex .holder.hidden{
@@ -139,6 +144,10 @@
 
 .label-ten{
 	background-color: #888888;
+}
+
+.label-test{
+	background-color: mediumspringgreen;
 }
 
 
