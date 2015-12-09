@@ -46,7 +46,6 @@ $(document).ready(function(){
 
 });
 
-
 function loadEx(){
     var host = window.location.hostname;
     var pageBody = $(document.body);
@@ -83,8 +82,6 @@ function loadEx(){
 
     jQuery('#trailex').prepend(htmlToAdd);
 }
-
-
 
 function displayTrail(){
     port.postMessage({"display": "display trail"});
@@ -202,8 +199,6 @@ $('body').on('click', '#add-trail', function(e){
       
       return false;
 });
-
-
 
 function addTrail(data){
     port.postMessage({"trail": "add trail", "data": data});
@@ -394,8 +389,10 @@ function colorTags(tags){
     //make tag a label
     //add a random label type to it
     for (var i = 0; i < tags.length; i ++){
-       wrappedTags.push('<div class ="label ' + colors[i] + '">' + tags[i]+'</div>');
+        wrappedTags.push('<div class ="label ' + colors[i] + '">' + tags[i]+'</div>');
     }
+   wrappedTags = wrappedTags.slice(0, 9);
+    console.log("colorTags()");
     return wrappedTags.join(" ");
 };
 
@@ -406,6 +403,7 @@ function displayTags(tags){
     for (var i = 0; i < tags.length; i ++){
        wrappedTags.push('<span class ="label ' + colors[i] + ' id="'+ tags[i] + '">' + tags[i]+'</span>');
     }
+    console.log("displayTags()");
     $('#tag-stream').append(wrappedTags.slice(0, 5));
 };
 
