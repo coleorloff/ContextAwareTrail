@@ -157,9 +157,13 @@ function toggleTrail(){
 function plusOne(){
     $('body').on('click', '#add-tag-button', function(e){
         var newTag = document.getElementById('add-tag-input').value.split(',');
-        document.getElementById('add-tag-input').value = "tags,go,here";
+        document.getElementById('add-tag-input').placeholder= "tags,go,here";
         for (var i = 0; i < newTag.length; i++){
-          $('#tag-stream').append('<span class="label label-ten" id="' + newTag[i] + '">' + newTag[i] + '</span>');
+            if (newTag.length == 0 || newTag == ""){console.log('nice try')}
+            else {
+                console.log('newTag = ',newTag)
+                $('#tag-stream').append('<span class="label label-ten" id="' + newTag[i] + '">' + newTag[i] + '</span>');
+            }
         }
         updateTags(newTag);
     });
