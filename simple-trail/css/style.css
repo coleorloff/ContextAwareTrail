@@ -53,7 +53,8 @@
 }
 
 #trailex .tag-bus{
-	display: inline-block;
+	display: inline;
+
 }
 
 #trailex .tag-bus .label{
@@ -139,6 +140,10 @@
 
 .label-ten{
 	background-color: #888888;
+}
+
+.label-test{
+	background-color: mediumspringgreen;
 }
 
 
