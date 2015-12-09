@@ -78,6 +78,10 @@
 	font-weight: 300;
 }
 
+#trailex .btn .btn-default:focus{
+	background-color: mediumspringgreen;
+}
+
 #trailex .holder.hidden{
 	visibility: hidden;
 }
